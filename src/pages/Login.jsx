@@ -10,7 +10,7 @@ function Login() {
 
   return (
     <div className="h-screen w-screen flex items-center justify-center">
-      <ModalCadastro openModal={modalOpen} setOpenModal={setModalOpen} />
+      <ModalCadastro modalOpen={modalOpen} setModalOpen={setModalOpen} />
       <Box className="p-4 rounded flex gap-2 w-fit flex-col items-center justify-center  border-2 border-gray-400">
         <h1>Login</h1>
         <form className="flex flex-col gap-2" action="/dashboard" method="post">

@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import ChatIcon from "@mui/icons-material/Chat";
 import * as React from "react";
 import "@fontsource/inter";
-import Drawer from "@mui/material/Drawer";
 import MeuModal from "../components/MeuModal";
 import MeuDrawer from "../components/MeuDrawer";
 

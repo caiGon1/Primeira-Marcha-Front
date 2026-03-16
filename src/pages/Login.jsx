@@ -5,8 +5,8 @@ import * as React from "react";
 import ModalCadastro from "../components/ModalCadastro";
 
 function Login() {
-    const navigator = useNavigate();
-      const [modalOpen, setModalOpen] = React.useState(false);
+  const navigator = useNavigate();
+  const [modalOpen, setModalOpen] = React.useState(false);
 
   return (
     <div className="h-screen w-screen flex items-center justify-center">
@@ -19,7 +19,8 @@ function Login() {
               id="outlined-email-input"
               label="Email"
               type="email"
-              autoComplete="email "
+              autoComplete="email"
+              required="true"
             />
 
             <TextField
@@ -27,6 +28,7 @@ function Login() {
               label="Password"
               type="password"
               autoComplete="current-password"
+              required="true"
             />
           </div>
           <button
@@ -37,7 +39,10 @@ function Login() {
             Login
           </button>
         </form>
-        <button onClick={() => setModalOpen(true)} className="border-2 rounded border-gray-400 w-24 cursor-pointer">
+        <button
+          onClick={() => setModalOpen(true)}
+          className="border-2 rounded border-gray-400 w-24 cursor-pointer"
+        >
           Cadastrar
         </button>
       </Box>

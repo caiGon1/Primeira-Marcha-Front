@@ -36,7 +36,7 @@ function CadastroInstrutor() {
         className="absolute top-4 left-4 cursor-pointer"
         onClick={() => navigator("/")}
       />
-      <form action='/dashboard' method="post">
+      <form action='/dashboard-instrutor' method="post">
         <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center border-2 border-gray-400">
           <Stack spacing={2}>
             <TextField required label="Nome Completo" type="text"></TextField>
@@ -104,7 +104,7 @@ function CadastroInstrutor() {
               }}
             />
           </Stack>
-          <Button variant="outlined" color="neutral" type="submit" onClick={()=>navigator("/dashboard")}>
+          <Button variant="outlined" color="neutral" type="submit" onClick={()=>navigator("/dashboard-instrutor")}>
             Cadastrar
           </Button>
         </Box>

@@ -8,16 +8,29 @@ function Login() {
   const navigator = useNavigate();
   const [modalOpen, setModalOpen] = React.useState(false);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const email = e.target.email.value;
+
+    if (email === "instrutor@email.com") {
+      navigator("/dashboard-instrutor");
+    } else {
+      navigator("/dashboard");
+    }
+  };
+
   return (
     <div className="h-screen w-screen flex items-center justify-center">
       <ModalCadastro modalOpen={modalOpen} setModalOpen={setModalOpen} />
       <Box className="p-4 rounded flex gap-2 w-fit flex-col items-center justify-center  border-2 border-gray-400">
         <h1>Login</h1>
-        <form className="flex flex-col gap-2" action="/dashboard" method="post">
+        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
           <div className="grid grid-rows-2 gap-2">
             <TextField
               id="outlined-email-input"
               label="Email"
+              name="email"
               type="email"
               autoComplete="email"
               required="true"
@@ -32,7 +45,6 @@ function Login() {
             />
           </div>
           <button
-            onClick={() => navigator("/dashboard")}
             className="border-2 rounded border-gray-400"
             type="submit"
           >

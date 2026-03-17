@@ -9,6 +9,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
+import CPFField from "../components/CPFField";
 
 function CadastroInstrutor() {
   const navigator = useNavigate();
@@ -46,7 +47,7 @@ function CadastroInstrutor() {
           <Stack spacing={2}>
             <TextField required label="Nome Completo" type="text"></TextField>
             <TextField required label="Email" type="email"></TextField>
-            <TextField required label="CPF" type="text"></TextField>
+            <CPFField />
                       <TextField
                           required
               label="Data de Nascimento"

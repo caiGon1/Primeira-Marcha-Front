@@ -11,41 +11,46 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import MenuItem from "@mui/material/MenuItem";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import CPFField from "../components/CPFField";
 
 function CadastroCondutor() {
-const UFs = [
-  { sigla: "AC", nome: "Acre" },
-  { sigla: "AL", nome: "Alagoas" },
-  { sigla: "AP", nome: "Amapá" },
-  { sigla: "AM", nome: "Amazonas" },
-  { sigla: "BA", nome: "Bahia" },
-  { sigla: "CE", nome: "Ceará" },
-  { sigla: "DF", nome: "Distrito Federal" },
-  { sigla: "ES", nome: "Espírito Santo" },
-  { sigla: "GO", nome: "Goiás" },
-  { sigla: "MA", nome: "Maranhão" },
-  { sigla: "MT", nome: "Mato Grosso" },
-  { sigla: "MS", nome: "Mato Grosso do Sul" },
-  { sigla: "MG", nome: "Minas Gerais" },
-  { sigla: "PA", nome: "Pará" },
-  { sigla: "PB", nome: "Paraíba" },
-  { sigla: "PR", nome: "Paraná" },
-  { sigla: "PE", nome: "Pernambuco" },
-  { sigla: "PI", nome: "Piauí" },
-  { sigla: "RJ", nome: "Rio de Janeiro" },
-  { sigla: "RN", nome: "Rio Grande do Norte" },
-  { sigla: "RS", nome: "Rio Grande do Sul" },
-  { sigla: "RO", nome: "Rondônia" },
-  { sigla: "RR", nome: "Roraima" },
-  { sigla: "SC", nome: "Santa Catarina" },
-  { sigla: "SP", nome: "São Paulo" },
-  { sigla: "SE", nome: "Sergipe" },
-  { sigla: "TO", nome: "Tocantins" }
-];
+  const UFs = [
+    { sigla: "AC", nome: "Acre" },
+    { sigla: "AL", nome: "Alagoas" },
+    { sigla: "AP", nome: "Amapá" },
+    { sigla: "AM", nome: "Amazonas" },
+    { sigla: "BA", nome: "Bahia" },
+    { sigla: "CE", nome: "Ceará" },
+    { sigla: "DF", nome: "Distrito Federal" },
+    { sigla: "ES", nome: "Espírito Santo" },
+    { sigla: "GO", nome: "Goiás" },
+    { sigla: "MA", nome: "Maranhão" },
+    { sigla: "MT", nome: "Mato Grosso" },
+    { sigla: "MS", nome: "Mato Grosso do Sul" },
+    { sigla: "MG", nome: "Minas Gerais" },
+    { sigla: "PA", nome: "Pará" },
+    { sigla: "PB", nome: "Paraíba" },
+    { sigla: "PR", nome: "Paraná" },
+    { sigla: "PE", nome: "Pernambuco" },
+    { sigla: "PI", nome: "Piauí" },
+    { sigla: "RJ", nome: "Rio de Janeiro" },
+    { sigla: "RN", nome: "Rio Grande do Norte" },
+    { sigla: "RS", nome: "Rio Grande do Sul" },
+    { sigla: "RO", nome: "Rondônia" },
+    { sigla: "RR", nome: "Roraima" },
+    { sigla: "SC", nome: "Santa Catarina" },
+    { sigla: "SP", nome: "São Paulo" },
+    { sigla: "SE", nome: "Sergipe" },
+    { sigla: "TO", nome: "Tocantins" },
+  ];
 
   const [uf, setUf] = useState("");
   const [cidade, setCidade] = useState("");
+  const [cpf, setCpf] = useState("");
   const [cidades, setCidades] = useState([]);
+
+
+
 
   useEffect(() => {
     if (uf) {
@@ -76,10 +81,10 @@ const UFs = [
     event.preventDefault();
   };
 
-    const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-      navigator("/dashboard");
+    navigator("/dashboard");
   };
   return (
     <div className="h-screen w-screen flex items-center justify-center">
@@ -92,7 +97,7 @@ const UFs = [
           <Stack spacing={2}>
             <TextField required label="Nome Completo" type="text"></TextField>
             <TextField required label="Email" type="email"></TextField>
-            <TextField required label="CPF" type="text"></TextField>
+            <CPFField />
             <TextField
               required
               label="Data de Nascimento"
@@ -182,11 +187,7 @@ const UFs = [
               }}
             />
           </Stack>
-          <Button
-            variant="outlined"
-            color="neutral"
-            type="submit"
-          >
+          <Button variant="outlined" color="neutral" type="submit">
             Cadastrar
           </Button>
         </Box>

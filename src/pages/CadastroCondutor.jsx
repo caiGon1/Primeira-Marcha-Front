@@ -75,13 +75,19 @@ const UFs = [
   const handleMouseUpPassword = (event) => {
     event.preventDefault();
   };
+
+    const handleSubmit = (e) => {
+    e.preventDefault();
+
+      navigator("/dashboard");
+  };
   return (
     <div className="h-screen w-screen flex items-center justify-center">
       <ArrowBackIosIcon
         className="absolute top-4 left-4 cursor-pointer"
         onClick={() => navigator("/")}
       />
-      <form action="/dashboard" method="post">
+      <form onSubmit={handleSubmit}>
         <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center border-2 border-gray-400">
           <Stack spacing={2}>
             <TextField required label="Nome Completo" type="text"></TextField>
@@ -180,7 +186,6 @@ const UFs = [
             variant="outlined"
             color="neutral"
             type="submit"
-            onClick={() => navigator("/dashboard")}
           >
             Cadastrar
           </Button>

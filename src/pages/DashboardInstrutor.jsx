@@ -9,9 +9,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { Button, DialogTitle } from "@mui/material";
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-
+import { TextField } from "@mui/material";
+import { NumericFormat } from "react-number-format";
 
 function DashboardInstrutor() {
   const navigator = useNavigate();
@@ -35,8 +34,22 @@ function DashboardInstrutor() {
           <DatePicker disablePast />
           <TimePicker disablePast defaultValue={null} />
         </LocalizationProvider>
-        <TextField  label='Preço por aula' variant='outlined' />
-        <Button variant='contained'>Criar disponibilidade</Button>
+        <NumericFormat
+          customInput={TextField}
+          label="Preço por aula"
+          variant="outlined"
+          thousandSeparator="."
+          decimalSeparator=","
+          prefix="R$ "
+          decimalScale={2}
+          fixedDecimalScale
+          allowNegative={false}
+          onValueChange={(values) => {
+            console.log(values.value); // "1500" (sem formatação)
+            console.log(values.floatValue); // 1500 (number)
+          }}
+        />
+        <Button variant="contained">Criar disponibilidade</Button>
       </MeuModal>
 
       <header className="flex gap-3 justify-center">
@@ -60,7 +73,10 @@ function DashboardInstrutor() {
             </li>
           </ul>
         </div>
-        <button onClick={() => setHorariosOpen(true)} className="p-2 border-2 rounded w-fit h-fit">
+        <button
+          onClick={() => setHorariosOpen(true)}
+          className="p-2 border-2 rounded w-fit h-fit"
+        >
           Criar uma aula
         </button>
       </div>

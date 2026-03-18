@@ -35,8 +35,8 @@ function Dashboard() {
       <MeuModal open={horariosOpen} onClose={() => setHorariosOpen(false)}>
         <DialogTitle>Selecione um dia e horário para você!</DialogTitle>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker/>
-          <TimePicker defaultValue={dayjs} />
+          <DatePicker disablePast/>
+          <TimePicker disablePast defaultValue={dayjs} />
         </LocalizationProvider>
           <Button onClick={() => setHorariosOpen(false) || setProfessorOpen(true) } className="mt-2" variant="outlined" color="neutral">Procurar um professor</Button>
       </MeuModal>

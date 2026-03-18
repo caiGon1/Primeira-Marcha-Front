@@ -8,6 +8,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CPFField from "../components/CPFField";
 import HideShowPassword from "../components/HideShowPassword";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 function CadastroCondutor() {
 
@@ -55,14 +58,9 @@ function CadastroCondutor() {
             <TextField required label="Nome Completo" type="text"></TextField>
             <TextField required label="Email" type="email"></TextField>
             <CPFField />
-            <TextField
-              required
-              label="Data de Nascimento"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              type="date"
-            ></TextField>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker label="Data de Nascimento" disableFuture/>
+              </LocalizationProvider>
           </Stack>
           <Stack spacing={2}>
             <TextField

@@ -2,7 +2,12 @@ import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/material";
 import * as React from "react";
-import ModalCadastro from "../components/ModalCadastro";
+import MeuModal from "../components/MeuModal";
+import ModalDialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import Stack from "@mui/material/Stack";
+import Button from "@mui/material/Button";
 
 function Login() {
   const navigator = useNavigate();
@@ -22,7 +27,29 @@ function Login() {
 
   return (
     <div className="h-screen w-screen flex items-center justify-center">
-      <ModalCadastro modalOpen={modalOpen} setModalOpen={setModalOpen} />
+      <MeuModal open={modalOpen} onClose={() => setModalOpen(false)}>
+          <DialogTitle sx={{ pb : 0 }}>Bem vindo(a) ao Primeira Marcha!</DialogTitle>
+          <DialogContent>
+            Selecione o tipo de cadastro que deseja realizar:
+            <Stack spacing={1}>
+              <Button
+                variant="outlined"
+                color="neutral"
+                onClick={() => navigator("/cadastrar-condutor")}
+              >
+                Sou condutor
+              </Button>
+              <Button
+                variant="outlined"
+                color="neutral"
+                onClick={() => navigator("/cadastrar-instrutor")}
+              >
+                Sou instrutor
+              </Button>
+            </Stack>
+          </DialogContent>
+      </MeuModal>
+
       <Box className="p-4 rounded flex gap-2 w-fit flex-col items-center justify-center  border-2 border-gray-400">
         <h1>Login</h1>
         <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
@@ -44,10 +71,7 @@ function Login() {
               required="true"
             />
           </div>
-          <button
-            className="border-2 rounded border-gray-400"
-            type="submit"
-          >
+          <button className="border-2 rounded border-gray-400" type="submit">
             Login
           </button>
         </form>

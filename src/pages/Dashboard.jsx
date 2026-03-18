@@ -16,7 +16,10 @@ const [openMenu, setMenuOpen] = React.useState(false);
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
-      <MeuModal openModal={modalOpen} setOpenModal={setModalOpen} />
+      <MeuModal open={modalOpen} onClose={() => setModalOpen(false)}>
+        <p>Este é o conteúdo do modal.</p>
+      </MeuModal>
+      
       <MeuDrawer openMenu={openMenu} setOpenMenu={setMenuOpen} />
       
       <header className="flex gap-3 justify-center">

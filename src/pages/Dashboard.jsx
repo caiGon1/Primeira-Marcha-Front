@@ -36,7 +36,7 @@ function Dashboard() {
         <DialogTitle>Selecione um dia e horário para você!</DialogTitle>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker disablePast/>
-          <TimePicker disablePast defaultValue={dayjs} />
+          <TimePicker disablePast defaultValue={null} />
         </LocalizationProvider>
           <Button onClick={() => setHorariosOpen(false) || setProfessorOpen(true) } className="mt-2" variant="outlined" color="neutral">Procurar um professor</Button>
       </MeuModal>

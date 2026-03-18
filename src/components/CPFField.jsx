@@ -5,13 +5,13 @@ function CPFField() {
   const [cpf, setCpf] = React.useState("");
 
   const formatCPF = (value) => {
-    // Remove tudo que não for número
+
     value = value.replace(/\D/g, "");
 
-    // Limita a 11 dígitos
+
     value = value.slice(0, 11);
 
-    // Aplica a máscara
+
     value = value.replace(/(\d{3})(\d)/, "$1.$2");
     value = value.replace(/(\d{3})(\d)/, "$1.$2");
     value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
@@ -28,7 +28,7 @@ function CPFField() {
       label="CPF"
       value={cpf}
       onChange={handleChange}
-      inputProps={{ inputMode: "numeric" }} // teclado numérico no mobile
+      inputProps={{ inputMode: "numeric" }} 
       fullWidth
     />
   );

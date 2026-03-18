@@ -1,35 +1,15 @@
-import * as React from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate } from "react-router-dom";
 import CPFField from "../components/CPFField";
+import HideShowPassword from "../components/HideShowPassword";
 
 function CadastroInstrutor() {
   const navigator = useNavigate();
 
-  const [showPassword, setShowPassword] = React.useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
-
-  const handleClickShowConfirmPassword = () =>
-    setShowConfirmPassword((show) => !show);
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
-  const handleMouseUpPassword = (event) => {
-    event.preventDefault();
-  };
 
     const handleSubmit = (e) => {
     e.preventDefault();
@@ -62,53 +42,8 @@ function CadastroInstrutor() {
             <TextField required label="Credencial do Detran" type="text"></TextField>
           </Stack>
           <Stack spacing={2}>
-            <TextField required
-              label="Senha"
-              type={showPassword ? "text" : "password"}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label={
-                        showPassword
-                          ? "hide the password"
-                          : "display the password"
-                      }
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      onMouseUp={handleMouseUpPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-                      <TextField
-                          required
-              label="Confirmar Senha"
-              type={showConfirmPassword ? "text" : "password"}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label={
-                        showConfirmPassword
-                          ? "hide the password"
-                          : "display the password"
-                      }
-                      onClick={handleClickShowConfirmPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      onMouseUp={handleMouseUpPassword}
-                      edge="end"
-                    >
-                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <HideShowPassword label="Senha" />
+            <HideShowPassword label="Confirmar Senha" />
           </Stack>
           <Button variant="outlined" color="neutral" type="submit">
             Cadastrar

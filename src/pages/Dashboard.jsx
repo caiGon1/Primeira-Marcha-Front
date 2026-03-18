@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 import ChatIcon from "@mui/icons-material/Chat";
 import * as React from "react";
 import "@fontsource/inter";
@@ -7,8 +7,7 @@ import MeuModal from "../components/MeuModal";
 import MeuDrawer from "../components/MeuDrawer";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Button, DialogTitle } from "@mui/material";
 
 function Dashboard() {
@@ -18,15 +17,9 @@ function Dashboard() {
   const [modalOpen, setModalOpen] = React.useState(false);
   const [horariosOpen, setHorariosOpen] = React.useState(false);
   const [professorOpen, setProfessorOpen] = React.useState(false);
-
-  const handleSubmit = (e) => { 
-    e.preventDefault();
-  }
-
+  const [value, setValue] = React.useState(dayjs(null));
 
   return (
-
-
     <div className="h-full w-full flex flex-col gap-4 p-4">
       <MeuModal open={modalOpen} onClose={() => setModalOpen(false)}>
         <p>Este é o conteúdo do modal.</p>
@@ -35,18 +28,40 @@ function Dashboard() {
       <MeuModal open={horariosOpen} onClose={() => setHorariosOpen(false)}>
         <DialogTitle>Selecione um dia e horário para você!</DialogTitle>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker disablePast/>
-          <TimePicker disablePast defaultValue={null} />
+          <DateTimePicker
+            disablePast
+            label="Dia & Horário"
+            value={value}
+            onChange={(newValue) => setValue(newValue)}
+            slotProps={{
+              textField: {
+                error: false,
+              },
+            }}
+          />
         </LocalizationProvider>
-          <Button onClick={() => setHorariosOpen(false) || setProfessorOpen(true) } className="mt-2" variant="outlined" color="neutral">Procurar um professor</Button>
+        <Button
+          onClick={() => setHorariosOpen(false) || setProfessorOpen(true)}
+          className="mt-2"
+          variant="outlined"
+          color="neutral"
+        >
+          Procurar um professor
+        </Button>
       </MeuModal>
 
-      <MeuModal open={professorOpen} onClose={()=> setProfessorOpen(false)}>
+      <MeuModal open={professorOpen} onClose={() => setProfessorOpen(false)}>
         <DialogTitle>Professores disponíveis</DialogTitle>
         <ul>
-          <li>Professor 1 <Button>Agendar</Button></li>
-          <li>Professor 2 <Button>Agendar</Button></li>
-          <li>Professor 3 <Button>Agendar</Button></li>
+          <li>
+            Professor 1 <Button>Agendar</Button>
+          </li>
+          <li>
+            Professor 2 <Button>Agendar</Button>
+          </li>
+          <li>
+            Professor 3 <Button>Agendar</Button>
+          </li>
         </ul>
       </MeuModal>
 
@@ -73,7 +88,10 @@ function Dashboard() {
             </li>
           </ul>
         </div>
-        <button onClick={() => setHorariosOpen(true)} className="p-2 border-2 rounded w-fit h-fit">
+        <button
+          onClick={() => setHorariosOpen(true)}
+          className="p-2 border-2 rounded w-fit h-fit"
+        >
           Agendar uma aula
         </button>
       </div>

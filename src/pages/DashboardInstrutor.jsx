@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 import ChatIcon from "@mui/icons-material/Chat";
 import * as React from "react";
 import "@fontsource/inter";
@@ -6,8 +7,7 @@ import MeuModal from "../components/MeuModal";
 import MeuDrawer from "../components/MeuDrawer";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { Button, DialogTitle } from "@mui/material";
 import { TextField } from "@mui/material";
 import { NumericFormat } from "react-number-format";
@@ -17,6 +17,8 @@ function DashboardInstrutor() {
   const [openMenu, setMenuOpen] = React.useState(false);
   const [horariosOpen, setHorariosOpen] = React.useState(false);
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [value1, setValue1] = React.useState(dayjs(null));
+  const [value2, setValue2] = React.useState(dayjs(null));
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
@@ -28,11 +30,29 @@ function DashboardInstrutor() {
         </DialogTitle>
         Estou disponível para aulas em:
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker disablePast />
-          <TimePicker disablePast defaultValue={null} />
+          <DateTimePicker
+            label="Dia & Horário"
+            value={value1}
+            onChange={(newValue) => setValue1(newValue)}
+            disablePast
+            slotProps={{
+    textField: {
+      error: false,
+    },
+  }}
+          />
           até
-          <DatePicker disablePast />
-          <TimePicker disablePast defaultValue={null} />
+          <DateTimePicker
+            disablePast
+            label="Dia & Horário"
+            value={value2}
+            onChange={(newValue) => setValue2(newValue)}
+            slotProps={{
+    textField: {
+      error: false,
+    },
+  }}
+          />
         </LocalizationProvider>
         <NumericFormat
           customInput={TextField}

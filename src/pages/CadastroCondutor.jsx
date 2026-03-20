@@ -11,14 +11,12 @@ import HideShowPassword from "../components/HideShowPassword";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Autocomplete from "@mui/material/Autocomplete";
 
 function CadastroCondutor() {
-
   const [uf, setUf] = useState("");
   const [ufs, setUFs] = useState([]);
-  const [cidade, setCidade] = useState("");
   const [cidades, setCidades] = useState([]);
-
 
   useEffect(() => {
     if (uf) {
@@ -30,13 +28,11 @@ function CadastroCondutor() {
     }
   }, [uf]);
 
-
   useEffect(() => {
     fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
       .then((res) => res.json())
       .then((data) => setUFs(data));
   }, []);
-
 
   const navigator = useNavigate();
 
@@ -52,15 +48,15 @@ function CadastroCondutor() {
         className="absolute top-4 left-4 cursor-pointer"
         onClick={() => navigator("/")}
       />
-      <form onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit}>
         <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center border-2 border-gray-400">
           <Stack spacing={2}>
             <TextField required label="Nome Completo" type="text"></TextField>
             <TextField required label="Email" type="email"></TextField>
             <CPFField />
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker label="Data de Nascimento" disableFuture/>
-              </LocalizationProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker label="Data de Nascimento" disableFuture />
+            </LocalizationProvider>
           </Stack>
           <Stack spacing={2}>
             <TextField
@@ -77,20 +73,17 @@ function CadastroCondutor() {
               ))}
             </TextField>
 
-            <TextField
-              label="Cidade"
-              required
-              select
-              value={cidade}
-              onChange={(e) => setCidade(e.target.value)}
+            <Autocomplete
               disabled={!uf}
-            >
-              {cidades.map((cidade) => (
-                <MenuItem key={cidade.nome} value={cidade.nome}>
-                  {cidade.nome}
-                </MenuItem>
-              ))}
-            </TextField>
+              required
+              options={cidades.map((cidade) => cidade.nome)}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Cidade"
+                />
+              )}
+            />
           </Stack>
           <Stack spacing={2}>
             <HideShowPassword label="Senha" />

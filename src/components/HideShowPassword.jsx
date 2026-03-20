@@ -15,6 +15,7 @@ export default function HideShowPassword({ label = "Senha" }) {
 
   return (
     <TextField
+      required
       variant="outlined"
       label={label}
       value={password}

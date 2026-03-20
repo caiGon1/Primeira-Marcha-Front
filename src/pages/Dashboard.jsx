@@ -61,8 +61,8 @@ function Dashboard() {
 
       <MeuModal open={professorOpen} onClose={() => setProfessorOpen(false)}>
         <DialogTitle>Professores disponíveis</DialogTitle>
-        <ul>
-          <li>
+        <List>
+          <ListItem>
             Professor 1 - 150 reais{" "}
             <Button
               onClick={() => {
@@ -80,8 +80,8 @@ function Dashboard() {
             >
               Agendar
             </Button>
-          </li>
-          <li>
+          </ListItem>
+          <ListItem>
             Professor 2 - 200 reais{" "}
             <Button
               onClick={() => {
@@ -99,8 +99,8 @@ function Dashboard() {
             >
               Agendar
             </Button>
-          </li>
-          <li>
+          </ListItem>
+          <ListItem>
             Professor 3 - 300 reais{" "}
             <Button
               onClick={() => {
@@ -118,8 +118,8 @@ function Dashboard() {
             >
               Agendar
             </Button>
-          </li>
-        </ul>
+          </ListItem>
+        </List>
       </MeuModal>
 
       <MeuModal open={carrinhoOpen} onClose={() => setCarrinhoOpen(false)}>

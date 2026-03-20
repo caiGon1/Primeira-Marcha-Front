@@ -3,11 +3,11 @@ import TextField from "@mui/material/TextField";
 import { Box } from "@mui/material";
 import * as React from "react";
 import MeuModal from "../components/MeuModal";
-import ModalDialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
+import HideShowPassword from "../components/HideShowPassword";
 
 function Login() {
   const navigator = useNavigate();
@@ -63,13 +63,7 @@ function Login() {
               required="true"
             />
 
-            <TextField
-              id="outlined-password-input"
-              label="Password"
-              type="password"
-              autoComplete="current-password"
-              required="true"
-            />
+            <HideShowPassword />
           </div>
           <button className="border-2 rounded border-gray-400" type="submit">
             Login

@@ -8,7 +8,7 @@ import MeuDrawer from "../components/MeuDrawer";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { Button, DialogTitle } from "@mui/material";
+import { Button, DialogTitle, List } from "@mui/material";
 import { TextField } from "@mui/material";
 import { NumericFormat } from "react-number-format";
 import { ListItem } from "@mui/material";
@@ -88,15 +88,15 @@ function DashboardInstrutor() {
       </MeuModal>
 
       <header className="flex gap-3 justify-center">
-        <button onClick={() => navigator("/")}>Logout</button>
-        <button onClick={() => setModalOpen(true)}>Perfil</button>
-        <button>Notificações</button>
+        <Button onClick={() => navigator("/")}>Logout</Button>
+        <Button onClick={() => setModalOpen(true)}>Perfil</Button>
+        <Button>Notificações</Button>
         <ChatIcon onClick={() => setMenuOpen(true)} />
       </header>
       <div className="flex flex-row gap-10 justify-center p-3">
         <div className="h-fit w-fit">
           <h1>Aulas Criadas</h1>
-          <ul className="flex flex-col gap-2 border-2 rounded p-2">
+          <List className="flex flex-col gap-2 border-2 rounded p-2">
             {aulas.length === 0 ? (
               <p className="text-center">Nenhuma aula criada</p>
             ) : (
@@ -127,14 +127,16 @@ function DashboardInstrutor() {
                 </ListItem>
               ))
             )}
-          </ul>
+          </List>
         </div>
-        <button
+        <Button 
+          variant="outlined"
+          color="neutral"
           onClick={() => setHorariosOpen(true)}
           className="p-2 border-2 rounded w-fit h-fit"
         >
           Criar uma aula
-        </button>
+        </Button>
       </div>
     </div>
   );

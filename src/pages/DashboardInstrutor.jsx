@@ -91,7 +91,7 @@ function DashboardInstrutor() {
         <Button onClick={() => navigator("/")}>Logout</Button>
         <Button onClick={() => setModalOpen(true)}>Perfil</Button>
         <Button>Notificações</Button>
-        <ChatIcon onClick={() => setMenuOpen(true)} />
+        <Button onClick={() => setMenuOpen(true)} >Chat </Button>
       </header>
       <div className="flex flex-row gap-10 justify-center p-3">
         <div className="h-fit w-fit">

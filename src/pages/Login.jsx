@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import { Box } from "@mui/material";
@@ -13,41 +15,69 @@ function Login() {
   const navigator = useNavigate();
   const [modalOpen, setModalOpen] = React.useState(false);
 
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    senha: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const email = e.target.email.value;
-
-    if (email === "instrutor@email.com") {
-      navigator("/dashboard-instrutor");
-    } else {
-      navigator("/dashboard");
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/aluno/login",
+        formData,
+      );
+      if (response.status === 200) {
+        alert("Login realizado com sucesso!");
+        console.log(formData);
+        navigator("/dashboard");
+      } else {
+        if (response.status === 401) {
+          alert("Credenciais inválidas. Por favor, tente novamente.");
+        } else {
+          alert("Erro ao realizar login.");
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao realizar login:", error);
+      console.log(formData);
+      alert("Erro ao realizar login.");
     }
   };
 
   return (
     <div className="h-screen w-screen flex items-center justify-center">
       <MeuModal open={modalOpen} onClose={() => setModalOpen(false)}>
-          <DialogTitle sx={{ pb : 0 }}>Bem vindo(a) ao Primeira Marcha!</DialogTitle>
-          <DialogContent>
-            Selecione o tipo de cadastro que deseja realizar:
-            <Stack spacing={1}>
-              <Button
-                variant="outlined"
-                color="neutral"
-                onClick={() => navigator("/cadastrar-condutor")}
-              >
-                Sou condutor
-              </Button>
-              <Button
-                variant="outlined"
-                color="neutral"
-                onClick={() => navigator("/cadastrar-instrutor")}
-              >
-                Sou instrutor
-              </Button>
-            </Stack>
-          </DialogContent>
+        <DialogTitle sx={{ pb: 0 }}>
+          Bem vindo(a) ao Primeira Marcha!
+        </DialogTitle>
+        <DialogContent>
+          Selecione o tipo de cadastro que deseja realizar:
+          <Stack spacing={1}>
+            <Button
+              variant="outlined"
+              color="neutral"
+              onClick={() => navigator("/cadastrar-condutor")}
+            >
+              Sou condutor
+            </Button>
+            <Button
+              variant="outlined"
+              color="neutral"
+              onClick={() => navigator("/cadastrar-instrutor")}
+            >
+              Sou instrutor
+            </Button>
+          </Stack>
+        </DialogContent>
       </MeuModal>
 
       <Box className="p-4 rounded flex gap-2 w-fit flex-col items-center justify-center  border-2 border-gray-400">
@@ -61,9 +91,15 @@ function Login() {
               type="email"
               autoComplete="email"
               required={true}
+              onChange={handleChange}
             />
 
-            <HideShowPassword required={true} />
+            <HideShowPassword
+              required={true}
+              name="senha"
+              value={formData.senha}
+              onChange={handleChange}
+            />
           </div>
           <button className="border-2 rounded border-gray-400" type="submit">
             Login

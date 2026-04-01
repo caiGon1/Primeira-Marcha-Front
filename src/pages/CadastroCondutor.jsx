@@ -58,7 +58,7 @@ function CadastroCondutor() {
 
     try {
       const response = await axios.post(
-        "https://primeira-marcha-backend.vercel.app/aluno",
+        "http://localhost:3000/aluno",
         formData,
       );
       console.log("Resposta do servidor:", response.data);

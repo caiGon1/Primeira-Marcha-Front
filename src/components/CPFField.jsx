@@ -1,16 +1,11 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 
-function CPFField() {
-  const [cpf, setCpf] = React.useState("");
+function CPFField({ value, onChange, name }) {
 
   const formatCPF = (value) => {
-
     value = value.replace(/\D/g, "");
-
-
     value = value.slice(0, 11);
-
 
     value = value.replace(/(\d{3})(\d)/, "$1.$2");
     value = value.replace(/(\d{3})(\d)/, "$1.$2");
@@ -20,15 +15,22 @@ function CPFField() {
   };
 
   const handleChange = (e) => {
-    setCpf(formatCPF(e.target.value));
+    const formatted = formatCPF(e.target.value);
+
+    onChange({
+      target: {
+        name,
+        value: formatted,
+      },
+    });
   };
 
   return (
     <TextField
       label="CPF"
-      value={cpf}
+      value={value}
       onChange={handleChange}
-      inputProps={{ inputMode: "numeric" }} 
+      inputProps={{ inputMode: "numeric" }}
       fullWidth
     />
   );

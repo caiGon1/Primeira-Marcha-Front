@@ -60,10 +60,10 @@ function Login() {
               name="email"
               type="email"
               autoComplete="email"
-              required="true"
+              required={true}
             />
 
-            <HideShowPassword />
+            <HideShowPassword required={true} />
           </div>
           <button className="border-2 rounded border-gray-400" type="submit">
             Login

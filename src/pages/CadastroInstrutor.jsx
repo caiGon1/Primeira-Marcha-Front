@@ -28,20 +28,20 @@ function CadastroInstrutor() {
       <form onSubmit={handleSubmit}>
         <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center border-2 border-gray-400">
           <Stack spacing={2}>
-            <TextField required label="Nome Completo" type="text"></TextField>
-            <TextField required label="Email" type="email"></TextField>
+            <TextField required={true} label="Nome Completo" type="text"></TextField>
+            <TextField required={true} label="Email" type="email"></TextField>
             <CPFField />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker label="Data de Nascimento" disableFuture/>
               </LocalizationProvider>
           </Stack>
           <Stack spacing={2}>
-            <TextField required label="Número de CNH" type="text"></TextField>
-            <TextField required label="Credencial do Detran" type="text"></TextField>
+            <TextField required={true} label="Número de CNH" type="text"></TextField>
+            <TextField required={true} label="Credencial do Detran" type="text"></TextField>
           </Stack>
           <Stack spacing={2}>
-            <HideShowPassword label="Senha" />
-            <HideShowPassword label="Confirmar Senha" />
+            <HideShowPassword required={true} label="Senha" />
+            <HideShowPassword required={true} label="Confirmar Senha" />
           </Stack>
           <Button variant="outlined" color="neutral" type="submit">
             Cadastrar

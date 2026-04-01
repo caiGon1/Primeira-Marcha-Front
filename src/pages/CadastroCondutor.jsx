@@ -1,3 +1,4 @@
+import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
@@ -14,9 +15,27 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Autocomplete from "@mui/material/Autocomplete";
 
 function CadastroCondutor() {
+  const navigator = useNavigate();
   const [uf, setUf] = useState("");
   const [ufs, setUFs] = useState([]);
   const [cidades, setCidades] = useState([]);
+
+  const [formData, setFormData] = useState({
+    nome: "",
+    email: "",
+    senha: "",
+    cpf: "",
+    dataNasc: "",
+    cidade: "",
+    UF: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   useEffect(() => {
     if (uf) {
@@ -34,12 +53,23 @@ function CadastroCondutor() {
       .then((data) => setUFs(data));
   }, []);
 
-  const navigator = useNavigate();
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    navigator("/dashboard");
+    try {
+      const response = await axios.post(
+        "https://primeira-marcha-backend.vercel.app/aluno",
+        formData,
+      );
+      console.log("Resposta do servidor:", response.data);
+      alert("Cadastro realizado com sucesso!");
+      console.log(formData);
+      navigator("/dashboard");
+    } catch (error) {
+      console.error("Erro ao cadastrar condutor:", error);
+      console.log(formData);
+      alert("Erro ao realizar cadastro.");
+    }
   };
 
   return (
@@ -51,20 +81,46 @@ function CadastroCondutor() {
       <form autoComplete="off" onSubmit={handleSubmit}>
         <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center border-2 border-gray-400">
           <Stack spacing={2}>
-            <TextField required label="Nome Completo" type="text"></TextField>
-            <TextField required label="Email" type="email"></TextField>
-            <CPFField />
+            <TextField
+              required={true}
+              label="Nome Completo"
+              type="text"
+              onChange={handleChange}
+              name="nome"
+            ></TextField>
+            <TextField
+              required={true}
+              label="Email"
+              type="email"
+              onChange={handleChange}
+              name="email"
+            ></TextField>
+            <CPFField name="cpf" value={formData.cpf} onChange={handleChange} />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker label="Data de Nascimento" disableFuture />
+              <DatePicker
+                label="Data de Nascimento"
+                disableFuture
+                onChange={(value) => {
+                  setFormData({
+                    ...formData,
+                    dataNasc: value ? value.format("YYYY-MM-DD") : "",
+                  });
+                }}
+                name="dataNasc"
+              />
             </LocalizationProvider>
           </Stack>
           <Stack spacing={2}>
             <TextField
+              name="UF"
               label="UF"
-              required
+              required={true}
               select
               value={uf}
-              onChange={(e) => setUf(e.target.value)}
+              onChange={(e) => {
+                handleChange(e);
+                setUf(e.target.value);
+              }}
             >
               {ufs.map((estados) => (
                 <MenuItem key={estados.sigla} value={estados.sigla}>
@@ -74,20 +130,27 @@ function CadastroCondutor() {
             </TextField>
 
             <Autocomplete
+              name="cidade"
               disabled={!uf}
-              required
+              required={true}
               options={cidades.map((cidade) => cidade.nome)}
+              onChange={(event, value) => {
+                setFormData({
+                  ...formData,
+                  cidade: value || "",
+                });
+              }}
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Cidade"
-                />
+                <TextField {...params} label="Cidade" required={true} />
               )}
             />
           </Stack>
           <Stack spacing={2}>
-            <HideShowPassword label="Senha" />
-            <HideShowPassword label="Confirmar Senha" />
+            <HideShowPassword
+              name="senha"
+              value={formData.senha}
+              onChange={handleChange}
+            />
           </Stack>
           <Button variant="outlined" color="neutral" type="submit">
             Cadastrar

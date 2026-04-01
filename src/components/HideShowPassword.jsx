@@ -5,27 +5,28 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-export default function HideShowPassword({ label = "Senha" }) {
+export default function HideShowPassword({ label = "Senha", value, onChange, name }) {
   const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
-
-  const handleClickShowPassword = () => {
-    setShowPassword((prev) => !prev);
-  };
 
   return (
     <TextField
       required
-      variant="outlined"
       label={label}
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
+      value={value}
+      onChange={(e) =>
+        onChange({
+          target: {
+            name,
+            value: e.target.value,
+          },
+        })
+      }
       type={showPassword ? "text" : "password"}
       fullWidth
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton onClick={handleClickShowPassword} edge="end">
+            <IconButton onClick={() => setShowPassword((prev) => !prev)}>
               {showPassword ? <VisibilityOff /> : <Visibility />}
             </IconButton>
           </InputAdornment>

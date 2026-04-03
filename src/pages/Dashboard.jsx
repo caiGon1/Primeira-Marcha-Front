@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import dayjs from "dayjs";
 import * as React from "react";
 import "@fontsource/inter";
@@ -24,11 +25,38 @@ function Dashboard() {
   const [value, setValue] = React.useState(dayjs(null));
   const [aulas, setAulas] = React.useState([]);
   const [reserva, setReserva] = React.useState([]);
+  const [user, setUser] = React.useState({ nome: "Carregando..." });
 
+
+    React.useEffect(() => {
+  const fetchUser = async () => {
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id");
+
+    try {
+      const res = await axios.get(
+        `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setUser(res.data); 
+      console.log(res.data)
+    } catch (err) {
+      console.error("Erro ao buscar dados do usuário:", err);
+      alert("Erro ao buscar dados do usuário.");
+    }
+  };
+
+  fetchUser();
+}, []);
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
       <MeuModal open={perfilOpen} onClose={() => setPerfilOpen(false)}>
-        <p>Este é o conteúdo do modal.</p>
+        <p>Olá, {user.nome}!</p>
       </MeuModal>
 
       <MeuModal open={horariosOpen} onClose={() => setHorariosOpen(false)}>

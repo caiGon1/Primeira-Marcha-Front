@@ -58,7 +58,7 @@ function CadastroCondutor() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/aluno",
+        "https://primeira-marcha-backend.vercel.app/aluno",
         formData,
       );
       console.log("Resposta do servidor:", response.data);
@@ -68,6 +68,7 @@ function CadastroCondutor() {
     } catch (error) {
       console.error("Erro ao cadastrar condutor:", error);
       console.log(formData);
+      console.log(error.response ? error.response.data : error.message);
       alert("Erro ao realizar cadastro.");
     }
   };

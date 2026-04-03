@@ -32,24 +32,20 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/aluno/login",
+        "https://primeira-marcha-backend.vercel.app/aluno/login",
         formData,
       );
-      if (response.status === 200) {
-        alert("Login realizado com sucesso!");
-        console.log(formData);
-        navigator("/dashboard");
-      } else {
-        if (response.status === 401) {
-          alert("Credenciais inválidas. Por favor, tente novamente.");
-        } else {
-          alert("Erro ao realizar login.");
-        }
-      }
+
+      alert("Login realizado com sucesso!");
+
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("id", response.data.aluno._id);
+
+      navigator("/dashboard");
     } catch (error) {
-      console.error("Erro ao realizar login:", error);
-      console.log(formData);
       alert("Erro ao realizar login.");
+      console.log(formData);
+      console.log(error.response ? error.response.data : error.message);
     }
   };
 

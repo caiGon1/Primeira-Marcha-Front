@@ -10,10 +10,12 @@ import DialogContent from "@mui/material/DialogContent";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import HideShowPassword from "../components/HideShowPassword";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Login() {
   const navigator = useNavigate();
   const [modalOpen, setModalOpen] = React.useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -29,7 +31,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const response = await axios.post(
         "https://primeira-marcha-backend.vercel.app/aluno/login",
@@ -46,6 +48,8 @@ function Login() {
       alert("Erro ao realizar login.");
       console.log(formData);
       console.log(error.response ? error.response.data : error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,16 +101,24 @@ function Login() {
               onChange={handleChange}
             />
           </div>
-          <button className="border-2 rounded border-gray-400" type="submit">
-            Login
-          </button>
+          <Button
+            className="border-2 rounded border-gray-400 flex items-center justify-center"
+            type="submit"
+            disabled={loading}
+            variant="outlined"
+            color="default"
+          >
+            {loading ? <CircularProgress size={20} /> : "Login"}
+          </Button>
         </form>
-        <button
+        <Button
           onClick={() => setModalOpen(true)}
           className="border-2 rounded border-gray-400 w-24 cursor-pointer"
+          variant="outlined"
+          color="default"
         >
           Cadastrar
-        </button>
+        </Button>
       </Box>
     </div>
   );

@@ -13,12 +13,14 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Autocomplete from "@mui/material/Autocomplete";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function CadastroCondutor() {
   const navigator = useNavigate();
   const [uf, setUf] = useState("");
   const [ufs, setUFs] = useState([]);
   const [cidades, setCidades] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     nome: "",
@@ -55,6 +57,7 @@ function CadastroCondutor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await axios.post(
@@ -70,6 +73,8 @@ function CadastroCondutor() {
       console.log(formData);
       console.log(error.response ? error.response.data : error.message);
       alert("Erro ao realizar cadastro.");
+    }finally {
+      setLoading(false);
     }
   };
 
@@ -153,8 +158,8 @@ function CadastroCondutor() {
               onChange={handleChange}
             />
           </Stack>
-          <Button variant="outlined" color="neutral" type="submit">
-            Cadastrar
+          <Button variant="outlined" color="neutral" type="submit" disabled={loading}>
+            {loading ? <CircularProgress size={20} /> : "Cadastrar"}
           </Button>
         </Box>
       </form>

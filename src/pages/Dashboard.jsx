@@ -8,12 +8,20 @@ import MeuDrawer from "../components/MeuDrawer";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { Button, DialogTitle, List, ListItem } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  DialogTitle,
+  List,
+  ListItem,
+} from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { Delete } from "@mui/icons-material";
 import { Snackbar, Alert } from "@mui/material";
 import TextField from "@mui/material/TextField";
-
+import { useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useEffect } from "react";
 
 function Dashboard() {
   const navigator = useNavigate();
@@ -32,7 +40,14 @@ function Dashboard() {
   const [emailPerfilOpen, setEmailPerfilOpen] = React.useState(false);
   const [cidadePerfilOpen, setCidadePerfilOpen] = React.useState(false);
   const [ufPerfilOpen, setUfPerfilOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [novoNome, setNovoNome] = useState("");
+  const [novoEmail, setNovoEmail] = useState("");
+  const [novaCidade, setNovaCidade] = useState("");
+  const [novaUF, setNovaUF] = useState("");
+
+
 
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -59,18 +74,108 @@ function Dashboard() {
     fetchUser();
   }, []);
 
- 
+  const handleSubmitNome = async (e) => {
+    e.preventDefault();
 
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id");
+
+    if (!token || !id) {
+      alert("Usuário não autenticado.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await axios.put(
+        `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
+        { nome: novoNome },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      alert("Nome atualizado com sucesso!");
+    } catch (err) {
+      console.error(
+        "Erro ao atualizar nome:",
+        err.response?.data || err.message,
+      );
+      alert("Erro ao atualizar nome.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitEmail = async (e) => {
+    e.preventDefault();
+
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id");
+
+    if (!token || !id) {
+      alert("Usuário não autenticado.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await axios.put(
+        `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
+        { email: novoEmail },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      alert("Email atualizado com sucesso!");
+    } catch (err) {
+      console.error(
+        "Erro ao atualizar email:",
+        err.response?.data || err.message,
+      );
+      alert("Erro ao atualizar email.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmitCidade = async (e) => {
+    e.preventDefault();
+    // Similar to handleSubmitNome, but for cidade
+  };
+
+  const handleSubmitUF = async (e) => {
+    e.preventDefault();
+    // Similar to handleSubmitNome, but for UF
+  };
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
       <MeuModal open={perfilOpen} onClose={() => setPerfilOpen(false)}>
         <p>Olá, {user.nome}! O que gostaria de fazer hoje?</p>
-        <Button onClick={() => {
-          setNomePerfilOpen(true);
-          setPerfilOpen(false);
-        }}>Alterar nome</Button>
-        <Button onClick={() => {}}>Alterar email</Button>
+        <Button
+          onClick={() => {
+            setNomePerfilOpen(true);
+            setPerfilOpen(false);
+          }}
+        >
+          Alterar nome
+        </Button>
+        <Button
+          onClick={() => {
+            setEmailPerfilOpen(true);
+            setPerfilOpen(false);
+          }}
+        >
+          Alterar email
+        </Button>
         <Button onClick={() => {}}>Alterar cidade</Button>
         <Button onClick={() => {}}>Alterar UF</Button>
       </MeuModal>
@@ -78,10 +183,20 @@ function Dashboard() {
       <MeuModal open={nomePerfilOpen} onClose={() => setNomePerfilOpen(false)}>
         <DialogTitle>Alterar nome</DialogTitle>
         <p>Nome atual: {user.nome}</p>
-        <form action="put">
-          <TextField type="text" placeholder="Novo nome" />
+
+        <form onSubmit={handleSubmitNome}>
+          <TextField
+            type="text"
+            placeholder="Novo nome"
+            value={novoNome}
+            disabled={loading}
+            onChange={(e) => setNovoNome(e.target.value)}
+          />
+
+          <Button type="submit">
+            {loading ? <CircularProgress size={20} /> : "Salvar"}
+          </Button>
         </form>
-        <Button type="submit">Salvar</Button>
       </MeuModal>
 
       <MeuModal
@@ -90,17 +205,21 @@ function Dashboard() {
       >
         <DialogTitle>Alterar email</DialogTitle>
         <p>Email atual: {user.email}</p>
-        <Button onClick={() => {}}>Salvar</Button>
+        <form onSubmit={handleSubmitEmail}>
+          <TextField
+            type="email"
+            placeholder="Novo email"
+            value={novoEmail}
+            disabled={loading}
+            onChange={(e) => setNovoEmail(e.target.value)}
+          />
+          <Button type="submit">
+            {loading ? <CircularProgress size={20} /> : "Salvar"}
+          </Button>
+        </form>
       </MeuModal>
 
-      <MeuModal
-        open={cidadePerfilOpen}
-        onClose={() => setCidadePerfilOpen(false)}
-      >
-        <DialogTitle>Alterar cidade</DialogTitle>
-        <p>Cidade atual: {user.cidade}</p>
-        <Button onClick={() => {}}>Salvar</Button>
-      </MeuModal>
+   
 
       <MeuModal open={ufPerfilOpen} onClose={() => setUfPerfilOpen(false)}>
         <DialogTitle>Alterar UF</DialogTitle>

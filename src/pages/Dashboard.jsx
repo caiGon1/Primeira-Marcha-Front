@@ -35,20 +35,28 @@ function Dashboard() {
   const [value, setValue] = React.useState(dayjs(null));
   const [aulas, setAulas] = React.useState([]);
   const [reserva, setReserva] = React.useState([]);
-  const [user, setUser] = React.useState({ nome: "Carregando..." });
+  const [user, setUser] = React.useState([{ nome: "Carregando..." }]);
   const [nomePerfilOpen, setNomePerfilOpen] = React.useState(false);
   const [emailPerfilOpen, setEmailPerfilOpen] = React.useState(false);
   const [cidadePerfilOpen, setCidadePerfilOpen] = React.useState(false);
   const [ufPerfilOpen, setUfPerfilOpen] = React.useState(false);
   const [loading, setLoading] = useState(false);
+  const [cidades, setCidades] = useState([]);
 
   const [novoNome, setNovoNome] = useState("");
   const [novoEmail, setNovoEmail] = useState("");
   const [novaCidade, setNovaCidade] = useState("");
   const [novaUF, setNovaUF] = useState("");
 
+  useEffect(() => {
 
-
+  if (user.UF) {
+    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${user.UF}/municipios`)
+      .then((res) => res.json())
+      .then((data) => setCidades(data));
+  }
+ }, [user.UF]);
+  
   React.useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
@@ -65,7 +73,8 @@ function Dashboard() {
         );
 
         setUser(res.data);
-        console.log(res.data);
+        console.log("Dados do usuário:", res.data);
+        console.log(token)
       } catch (err) {
         console.error("Erro ao buscar dados do usuário:", err);
         alert("Erro ao buscar dados do usuário.");
@@ -148,7 +157,36 @@ function Dashboard() {
 
   const handleSubmitCidade = async (e) => {
     e.preventDefault();
-    // Similar to handleSubmitNome, but for cidade
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id");
+
+    if (!token || !id) {
+      alert("Usuário não autenticado.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await axios.put(
+        `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
+        { cidade: novaCidade },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      alert("Cidade atualizada com sucesso!");
+    } catch (err) {
+      console.error(
+        "Erro ao atualizar cidade:",
+        err.response?.data || err.message,
+      );
+      alert("Erro ao atualizar cidade.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmitUF = async (e) => {
@@ -176,7 +214,14 @@ function Dashboard() {
         >
           Alterar email
         </Button>
-        <Button onClick={() => {}}>Alterar cidade</Button>
+        <Button
+          onClick={() => {
+            setCidadePerfilOpen(true);
+            setPerfilOpen(false);
+          }}
+        >
+          Alterar cidade
+        </Button>
         <Button onClick={() => {}}>Alterar UF</Button>
       </MeuModal>
 
@@ -219,7 +264,24 @@ function Dashboard() {
         </form>
       </MeuModal>
 
-   
+      <MeuModal
+        open={cidadePerfilOpen}
+        onClose={() => setCidadePerfilOpen(false)}
+      >
+        <DialogTitle>Alterar cidade</DialogTitle>
+        <p>Cidade atual: {user.cidade}</p>
+        <form onSubmit={handleSubmitCidade}>
+          <Autocomplete
+            options={cidades.map((cidade) => cidade.nome)}
+            loadingText="Carregando cidades..."
+            noOptionsText="Nenhuma cidade encontrada"
+            renderInput={(params) => <TextField {...params} label="Cidades" />}
+          />
+          <Button type="submit">
+            {loading ? <CircularProgress size={20} /> : "Salvar"}
+          </Button>
+        </form>
+      </MeuModal>
 
       <MeuModal open={ufPerfilOpen} onClose={() => setUfPerfilOpen(false)}>
         <DialogTitle>Alterar UF</DialogTitle>

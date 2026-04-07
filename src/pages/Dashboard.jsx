@@ -275,6 +275,7 @@ function Dashboard() {
             options={cidades.map((cidade) => cidade.nome)}
             loadingText="Carregando cidades..."
             noOptionsText="Nenhuma cidade encontrada"
+            onChange={(e) => setNovaCidade(e.target.value)}
             renderInput={(params) => <TextField {...params} label="Cidades" />}
           />
           <Button type="submit">

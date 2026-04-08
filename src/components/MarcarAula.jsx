@@ -34,15 +34,15 @@ function MarcarAula({ open, onClose }) {
     if (!token || !id) return;
     try {
       setLoading(true);
-      const response = await axios.post(
+      await axios.post(
         "https://primeira-marcha-backend.vercel.app/aula",
         {
-          alunoId: user.id,
-          instrutorId: instrutorSelecionado.id,
-          dataIncio: data,
+          aluno: user._id,
+          instrutor: instrutorSelecionado._id,
+          dataInicio: data,
           dataFinal: data,
-          localdeAula: localdeAula,
-          statusAula: "Pendente",
+          UF: user.UF,
+          localAula: localdeAula
         },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -59,7 +59,7 @@ function MarcarAula({ open, onClose }) {
         dataFinal: data,
         UF: user.UF,
         localAula: localdeAula,
-        statusAula: "Pendente",
+        statusAula: "pendente"
       });
     } finally {
       setLoading(false);

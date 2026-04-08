@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import ChatIcon from "@mui/icons-material/Chat";
 import * as React from "react";
 import "@fontsource/inter";
 import MeuModal from "../components/MeuModal";

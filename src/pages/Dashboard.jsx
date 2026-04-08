@@ -5,19 +5,19 @@ import * as React from "react";
 import "@fontsource/inter";
 import MeuModal from "../components/MeuModal";
 import MeuDrawer from "../components/MeuDrawer";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { Button, DialogTitle, List, ListItem, Snackbar, Alert } from "@mui/material";
+import { Button, DialogTitle, List, ListItem} from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { Delete } from "@mui/icons-material";
 import Profile from "../components/Profile";
+import MarcarAula from "../components/MarcarAula";
 
 function Dashboard() {
   const navigator = useNavigate();
 
   const [openMenu, setMenuOpen] = React.useState(false);
   const [perfilOpen, setPerfilOpen] = React.useState(false);
+  const [marcarAulaOpen, setMarcarAulaOpen] = React.useState(false);
+
   const [horariosOpen, setHorariosOpen] = React.useState(false);
   const [professorOpen, setProfessorOpen] = React.useState(false);
   const [carrinhoOpen, setCarrinhoOpen] = React.useState(false);
@@ -65,46 +65,10 @@ function Dashboard() {
         onClose={() => setPerfilOpen(false)} 
       />
 
-
-      <MeuModal open={horariosOpen} onClose={() => setHorariosOpen(false)}>
-        <DialogTitle>Selecione um dia e horário para você!</DialogTitle>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker
-            disablePast
-            label="Dia & Horário"
-            value={value}
-            onChange={(newValue) => setValue(newValue)}
-            slotProps={{ textField: { fullWidth: true } }}
-          />
-        </LocalizationProvider>
-        <Button
-          onClick={() => { setHorariosOpen(false); setProfessorOpen(true); }}
-          className="mt-2"
-          variant="outlined"
-          fullWidth
-        >
-          Procurar um professor
-        </Button>
-      </MeuModal>
-
-   
-      <MeuModal open={professorOpen} onClose={() => setProfessorOpen(false)}>
-        <DialogTitle>Professores disponíveis</DialogTitle>
-        <List>
-          {[
-            { id: 1, nome: "Professor 1", preco: 150 },
-            { id: 2, nome: "Professor 2", preco: 200 },
-            { id: 3, nome: "Professor 3", preco: 300 },
-          ].map((prof) => (
-            <ListItem key={prof.id} sx={{ justifyContent: 'space-between' }}>
-              {prof.nome} - R$ {prof.preco}
-              <Button onClick={() => agendarAula(prof.nome, prof.preco)}>
-                Agendar
-              </Button>
-            </ListItem>
-          ))}
-        </List>
-      </MeuModal>
+      <MarcarAula
+        open={marcarAulaOpen}
+        onClose={() => setMarcarAulaOpen(false)}
+      />
 
       <MeuModal open={carrinhoOpen} onClose={() => setCarrinhoOpen(false)}>
         <DialogTitle>Seu Carrinho</DialogTitle>
@@ -137,15 +101,7 @@ function Dashboard() {
         </List>
       </MeuModal>
 
-      <Snackbar open={alertOpen} autoHideDuration={5000} onClose={() => setAlertOpen(false)}>
-        <Alert severity="success" action={
-          <Button color="inherit" size="small" onClick={() => {setCarrinhoOpen(true); setAlertOpen(false);}}>
-            CARRINHO
-          </Button>
-        }>
-          Aula reservada com sucesso!
-        </Alert>
-      </Snackbar>
+      
 
       <MeuDrawer openMenu={openMenu} setOpenMenu={setMenuOpen} />
 
@@ -181,7 +137,7 @@ function Dashboard() {
         </Box>
 
         <Stack direction="column" gap={2} justifyContent="center">
-          <Button onClick={() => setHorariosOpen(true)} variant="outlined" size="large">
+          <Button onClick={() => setMarcarAulaOpen(true)} variant="outlined" size="large">
             Agendar uma aula
           </Button>
           <Button onClick={() => setCarrinhoOpen(true)} variant="outlined" color="secondary">

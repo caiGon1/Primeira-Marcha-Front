@@ -4,29 +4,21 @@ import dayjs from "dayjs";
 import * as React from "react";
 import "@fontsource/inter";
 import MeuModal from "../components/MeuModal";
-import MeuDrawer from "../components/MeuDrawer";
 import { Button, DialogTitle, List, ListItem } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { Delete } from "@mui/icons-material";
 import Profile from "../components/Profile";
 import MarcarAula from "../components/MarcarAula";
+import { useEffect } from "react";
 
 function Dashboard() {
   const navigator = useNavigate();
 
-  const [openMenu, setMenuOpen] = React.useState(false);
   const [perfilOpen, setPerfilOpen] = React.useState(false);
   const [marcarAulaOpen, setMarcarAulaOpen] = React.useState(false);
-
-  const [horariosOpen, setHorariosOpen] = React.useState(false);
-  const [professorOpen, setProfessorOpen] = React.useState(false);
   const [carrinhoOpen, setCarrinhoOpen] = React.useState(false);
-  const [alertOpen, setAlertOpen] = React.useState(false);
-
-  const [value, setValue] = React.useState(dayjs());
   const [aulas, setAulas] = React.useState([]);
   const [reserva, setReserva] = React.useState([]);
-  const [user, setUser] = React.useState({ nome: "Carregando..." });
 
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -39,7 +31,6 @@ function Dashboard() {
           `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
           { headers: { Authorization: `Bearer ${token}` } },
         );
-        setUser(res.data);
       } catch (err) {
         console.error("Erro ao buscar dados do usuário:", err);
       }
@@ -47,7 +38,7 @@ function Dashboard() {
     fetchUser();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchAulasComInstrutor = async () => {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
@@ -72,11 +63,13 @@ function Dashboard() {
               return {
                 ...aula,
                 nomeInstrutor: instrutorRes.data.nome,
+                valorInstrutor: instrutorRes.data.valorAula,
               };
             } catch {
               return {
                 ...aula,
                 nomeInstrutor: "Instrutor Desconhecido",
+                valorInstrutor: "N/A",
               };
             }
           }),
@@ -141,12 +134,10 @@ function Dashboard() {
         </List>
       </MeuModal>
 
-      <MeuDrawer openMenu={openMenu} setOpenMenu={setMenuOpen} />
 
       <header className="flex gap-3 justify-center border-b pb-4">
         <Button onClick={() => navigator("/")}>Logout</Button>
         <Button onClick={() => setPerfilOpen(true)}>Perfil</Button>
-        <Button onClick={() => setMenuOpen(true)}>Chat</Button>
       </header>
 
       <Box className="flex flex-col md:flex-row gap-10 justify-center p-3">
@@ -162,26 +153,21 @@ function Dashboard() {
                   className="border-b flex justify-between gap-4"
                 >
                   <Stack>
-                    <strong>{aula.nomeInstrutor}</strong>
+                    <strong>{`${aula.nomeInstrutor} - ${aula.valorInstrutor}R$`}</strong>
                     <span className="text-sm">
                       {dayjs(aula.dataInicio).format("DD/MM/YYYY HH:mm")}
                     </span>
-                    <span className="text-sm">{aula.statusAula}</span>
+                    <span>{aula.localAula}</span>
+                    <span className="text-sm">
+                      {aula.statusAula === "pendente" ? "Pendente" : aula.statusAula === "confirmada" ? "Confirmada" : "N/A"}
+                    </span>
                   </Stack>
-
-                  <Button
-                    color="error"
-                    onClick={() =>
-                      setAulas(aulas.filter((_, i) => i !== index))
-                    }
-                  >
-                    <Delete />
-                  </Button>
                 </ListItem>
               ))
             )}
           </List>
         </Box>
+        
 
         <Stack direction="column" gap={2} justifyContent="center">
           <Button

@@ -5,7 +5,7 @@ import * as React from "react";
 import "@fontsource/inter";
 import MeuModal from "../components/MeuModal";
 import MeuDrawer from "../components/MeuDrawer";
-import { Button, DialogTitle, List, ListItem} from "@mui/material";
+import { Button, DialogTitle, List, ListItem } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { Delete } from "@mui/icons-material";
 import Profile from "../components/Profile";
@@ -23,12 +23,10 @@ function Dashboard() {
   const [carrinhoOpen, setCarrinhoOpen] = React.useState(false);
   const [alertOpen, setAlertOpen] = React.useState(false);
 
-
   const [value, setValue] = React.useState(dayjs());
   const [aulas, setAulas] = React.useState([]);
   const [reserva, setReserva] = React.useState([]);
   const [user, setUser] = React.useState({ nome: "Carregando..." });
-
 
   React.useEffect(() => {
     const fetchUser = async () => {
@@ -39,7 +37,7 @@ function Dashboard() {
       try {
         const res = await axios.get(
           `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } },
         );
         setUser(res.data);
       } catch (err) {
@@ -49,21 +47,53 @@ function Dashboard() {
     fetchUser();
   }, []);
 
-  const agendarAula = (professor, preco) => {
-    setProfessorOpen(false);
-    setAlertOpen(true);
-    setAulas([...aulas, { professor, horario: value, reservada: true }]);
-    setReserva([...reserva, { professor, preco }]);
-  };
+  React.useEffect(() => {
+    const fetchAulasComInstrutor = async () => {
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
+      if (!token || !id) return;
+
+      try {
+        const res = await axios.get(
+          `https://primeira-marcha-backend.vercel.app/aulas/aluno/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+
+        const aulas = res.data;
+
+        const aulasComInstrutor = await Promise.all(
+          aulas.map(async (aula) => {
+            try {
+              const instrutorRes = await axios.get(
+                `https://primeira-marcha-backend.vercel.app/instrutor/${aula.instrutor}`,
+                 { headers: { Authorization: `Bearer ${token}` } },
+              );
+
+              return {
+                ...aula,
+                nomeInstrutor: instrutorRes.data.nome,
+              };
+            } catch {
+              return {
+                ...aula,
+                nomeInstrutor: "Instrutor Desconhecido",
+              };
+            }
+          }),
+        );
+
+        setAulas(aulasComInstrutor);
+      } catch (err) {
+        console.error("Erro ao buscar aulas:", err);
+      }
+    };
+
+    fetchAulasComInstrutor();
+  }, []);
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
-      
-
-      <Profile 
-        open={perfilOpen} 
-        onClose={() => setPerfilOpen(false)} 
-      />
+      <Profile open={perfilOpen} onClose={() => setPerfilOpen(false)} />
 
       <MarcarAula
         open={marcarAulaOpen}
@@ -78,17 +108,27 @@ function Dashboard() {
           ) : (
             reserva.map((item, index) => (
               <ListItem key={index} sx={{ gap: 2 }}>
-                <Box sx={{ flexGrow: 1 }}>{item.professor} - R$ {item.preco}</Box>
-                <Button color="error" onClick={() => {
-                  setReserva(reserva.filter((_, i) => i !== index));
-                }}>
+                <Box sx={{ flexGrow: 1 }}>
+                  {item.professor} - R$ {item.preco}
+                </Box>
+                <Button
+                  color="error"
+                  onClick={() => {
+                    setReserva(reserva.filter((_, i) => i !== index));
+                  }}
+                >
                   <Delete />
                 </Button>
                 <Button
                   variant="contained"
                   onClick={() => {
-                    // Atualiza a aula correspondente para "Paga" (reservada: false)
-                    setAulas(aulas.map(a => a.professor === item.professor ? { ...a, reservada: false } : a));
+                    setAulas(
+                      aulas.map((a) =>
+                        a.professor === item.professor
+                          ? { ...a, reservada: false }
+                          : a,
+                      ),
+                    );
                     setReserva(reserva.filter((_, i) => i !== index));
                     setCarrinhoOpen(false);
                   }}
@@ -101,8 +141,6 @@ function Dashboard() {
         </List>
       </MeuModal>
 
-      
-
       <MeuDrawer openMenu={openMenu} setOpenMenu={setMenuOpen} />
 
       <header className="flex gap-3 justify-center border-b pb-4">
@@ -112,22 +150,31 @@ function Dashboard() {
       </header>
 
       <Box className="flex flex-col md:flex-row gap-10 justify-center p-3">
-        <Box className="border rounded-lg p-4 min-w-[300px]">
+        <Box className="border rounded-lg p-4 min-w-75">
           <h2 className="text-xl font-bold mb-4 text-center">Próximas Aulas</h2>
           <List className="flex flex-col gap-2">
             {aulas.length === 0 ? (
               <p className="text-center text-gray-500">Nenhuma aula agendada</p>
             ) : (
               aulas.map((aula, index) => (
-                <ListItem key={index} className="border-b flex justify-between gap-4">
+                <ListItem
+                  key={index}
+                  className="border-b flex justify-between gap-4"
+                >
                   <Stack>
-                    <strong>{aula.professor}</strong>
-                    <span className="text-sm">{aula.horario.format("DD/MM/YYYY HH:mm")}</span>
-                    <span className={`text-xs ${aula.reservada ? 'text-orange-500' : 'text-green-500'}`}>
-                      {aula.reservada ? "Aguardando Pagamento" : "Confirmada (Paga)"}
+                    <strong>{aula.nomeInstrutor}</strong>
+                    <span className="text-sm">
+                      {dayjs(aula.dataInicio).format("DD/MM/YYYY HH:mm")}
                     </span>
+                    <span className="text-sm">{aula.statusAula}</span>
                   </Stack>
-                  <Button color="error" onClick={() => setAulas(aulas.filter((_, i) => i !== index))}>
+
+                  <Button
+                    color="error"
+                    onClick={() =>
+                      setAulas(aulas.filter((_, i) => i !== index))
+                    }
+                  >
                     <Delete />
                   </Button>
                 </ListItem>
@@ -137,10 +184,18 @@ function Dashboard() {
         </Box>
 
         <Stack direction="column" gap={2} justifyContent="center">
-          <Button onClick={() => setMarcarAulaOpen(true)} variant="outlined" size="large">
+          <Button
+            onClick={() => setMarcarAulaOpen(true)}
+            variant="outlined"
+            size="large"
+          >
             Agendar uma aula
           </Button>
-          <Button onClick={() => setCarrinhoOpen(true)} variant="outlined" color="secondary">
+          <Button
+            onClick={() => setCarrinhoOpen(true)}
+            variant="outlined"
+            color="secondary"
+          >
             Ver Carrinho ({reserva.length})
           </Button>
         </Stack>

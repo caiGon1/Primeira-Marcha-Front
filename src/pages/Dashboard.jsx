@@ -86,7 +86,7 @@ function Dashboard() {
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
-      <Profile open={perfilOpen} onClose={() => setPerfilOpen(false)} />
+      <Profile open={perfilOpen} onClose={() => setPerfilOpen(false)} tipo="aluno" />
 
       <MarcarAula
         open={marcarAulaOpen}

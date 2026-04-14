@@ -12,7 +12,7 @@ import {
   CircularProgress
 } from "@mui/material";
 
-function Profile({ open, onClose }) {
+function Profile({ open, onClose, tipo }) {
   const [user, setUser] = useState(null);
 
   const [nomePerfilOpen, setNomePerfilOpen] = useState(false);
@@ -25,15 +25,18 @@ function Profile({ open, onClose }) {
   const [novoEmail, setNovoEmail] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
 
+ 
+
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
-
+      const endpoint = `${tipo}/${id}`;
+      
       try {
         const res = await axios.get(
-          `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
+          `https://primeira-marcha-backend.vercel.app/${endpoint}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -56,12 +59,13 @@ function Profile({ open, onClose }) {
   const updateUser = async (data) => {
     const token = localStorage.getItem("token");
     const id = localStorage.getItem("id");
+     const endpoint = `${tipo}/${id}`;
 
     try {
       setLoading(true);
 
       await axios.put(
-        `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
+        `https://primeira-marcha-backend.vercel.app/${endpoint}`,
         data,
         {
           headers: { Authorization: `Bearer ${token}` },

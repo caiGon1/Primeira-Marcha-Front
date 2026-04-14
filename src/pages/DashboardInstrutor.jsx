@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import * as React from "react";
 import "@fontsource/inter";
 import MeuModal from "../components/MeuModal";
-import MeuDrawer from "../components/MeuDrawer";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -13,23 +12,43 @@ import { NumericFormat } from "react-number-format";
 import { ListItem } from "@mui/material";
 import { Stack } from "@mui/system";
 import { Delete } from "@mui/icons-material";
-
+import Profile from "../components/Profile";
+import { useEffect } from "react";
+import axios from "axios";
 
 function DashboardInstrutor() {
   const tomorrow = dayjs().add(1, "day");
   const navigator = useNavigate();
-  const [openMenu, setMenuOpen] = React.useState(false);
+  const [perfilOpen, setPerfilOpen] = React.useState(false);
   const [horariosOpen, setHorariosOpen] = React.useState(false);
-  const [modalOpen, setModalOpen] = React.useState(false);
   const [value1, setValue1] = React.useState(dayjs(null));
   const [value2, setValue2] = React.useState(dayjs(null));
   const [value3, setValue3] = React.useState("");
   const [aulas, setAulas] = React.useState([]);
 
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
+      if (!token || !id) return;
+
+      try {
+        const res = await axios.get(
+          `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+      } catch (err) {
+        console.error("Erro ao buscar dados do usuário:", err);
+      }
+    };
+    fetchUser();
+  }, []);
+
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
-      <MeuModal openModal={modalOpen} setOpenModal={setModalOpen} />
-      <MeuDrawer openMenu={openMenu} setOpenMenu={setMenuOpen} />
+       
+      <Profile open={perfilOpen} onClose={() => setPerfilOpen(false)} tipo="instrutor" />
       <MeuModal open={horariosOpen} onClose={() => setHorariosOpen(false)}>
         <DialogTitle>
           Selecione o dia e horário disponíveis para aula
@@ -87,10 +106,9 @@ function DashboardInstrutor() {
       </MeuModal>
 
       <header className="flex gap-3 justify-center">
+       
         <Button onClick={() => navigator("/")}>Logout</Button>
-        <Button onClick={() => setModalOpen(true)}>Perfil</Button>
-        <Button>Notificações</Button>
-        <Button onClick={() => setMenuOpen(true)} >Chat </Button>
+        <Button onClick={() => setPerfilOpen(true)}>Perfil</Button>
       </header>
       <div className="flex flex-row gap-10 justify-center p-3">
         <div className="h-fit w-fit">

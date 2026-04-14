@@ -46,9 +46,23 @@ function Login() {
 
       navigator("/dashboard");
     } catch (error) {
-      alert("Erro ao realizar login.");
-      console.log(formData);
-      console.log(error.response ? error.response.data : error.message);
+      try {
+        const response = await axios.post(
+          "https://primeira-marcha-backend.vercel.app/instrutor/login",
+          formData,
+        );
+        alert("Login realizado com sucesso!");
+
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("id", response.data.instrutor._id);
+
+        navigator("/dashboard-instrutor");
+      } catch (error) {
+        console.error("Erro ao realizar login:", error);
+        alert("Erro ao realizar login.");
+        console.log(formData);
+        console.log(error.response ? error.response.data : error.message);
+      }
     } finally {
       setLoading(false);
     }

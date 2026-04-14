@@ -52,15 +52,6 @@ function MarcarAula({ open, onClose }) {
     } catch (error) {
       alert("Erro ao marcar aula.");
       console.log(error.response ? error.response.data : error.message);
-      console.log({
-        aluno: user._id,
-        instrutor: instrutorSelecionado._id,
-        dataIncio: data,
-        dataFinal: data,
-        UF: user.UF,
-        localAula: localdeAula,
-        statusAula: "pendente"
-      });
     } finally {
       setLoading(false);
     }
@@ -78,7 +69,6 @@ function MarcarAula({ open, onClose }) {
           { headers: { Authorization: `Bearer ${token}` } },
         );
         setUser(res.data);
-        console.log(res.data);
       } catch (err) {
         console.error("Erro ao buscar dados do usuário:", err);
       }
@@ -105,7 +95,6 @@ function MarcarAula({ open, onClose }) {
         );
 
         setInstrutores(filtrados);
-        console.log(filtrados);
       } catch (error) {
         console.error("Erro ao buscar instrutores:", error);
       }

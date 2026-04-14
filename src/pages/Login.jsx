@@ -54,7 +54,7 @@ function Login() {
         alert("Login realizado com sucesso!");
 
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("id", response.data.instrutor._id);
+        localStorage.setItem("id", response.data.instrutor.id);
 
         navigator("/dashboard-instrutor");
       } catch (error) {

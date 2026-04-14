@@ -27,23 +27,7 @@ function DashboardInstrutor() {
   const [aulas, setAulas] = React.useState([]);
 
 
-  React.useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      if (!token || !id) return;
 
-      try {
-        const res = await axios.get(
-          `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
-      } catch (err) {
-        console.error("Erro ao buscar dados do usuário:", err);
-      }
-    };
-    fetchUser();
-  }, []);
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">

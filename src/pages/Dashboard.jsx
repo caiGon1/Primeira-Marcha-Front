@@ -20,23 +20,6 @@ function Dashboard() {
   const [aulas, setAulas] = React.useState([]);
   const [reserva, setReserva] = React.useState([]);
 
-  React.useEffect(() => {
-    const fetchUser = async () => {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      if (!token || !id) return;
-
-      try {
-        const res = await axios.get(
-          `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
-      } catch (err) {
-        console.error("Erro ao buscar dados do usuário:", err);
-      }
-    };
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     const fetchAulasComInstrutor = async () => {

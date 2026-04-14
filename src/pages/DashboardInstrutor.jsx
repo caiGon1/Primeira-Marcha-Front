@@ -94,6 +94,7 @@ function DashboardInstrutor() {
       console.log(token);
     } finally {
       setLoadingRejeitar(false);
+      window.location.reload(); 
     }
   };
 
@@ -112,6 +113,7 @@ function DashboardInstrutor() {
       console.log(error.response ? error.response.data : error.message);
     } finally {
       setLoadingAceitar(false);
+      window.location.reload(); 
     }
   };
 
@@ -236,7 +238,7 @@ function DashboardInstrutor() {
                       {aula.localAula}
                     </span>
                   </Stack>
-                  <Button color="error" onClick={() => handleReject(aula.id)}>
+                  <Button color="error" onClick={() => handleReject(aula._id)}>
                     {loadingRejeitar ? (
                       <CircularProgress size={20} />
                     ) : (
@@ -246,7 +248,7 @@ function DashboardInstrutor() {
                   <Button
                     color="success"
                     onClick={() => {
-                      handleAccept(aula.id);
+                      handleAccept(aula._id);
                     }}
                   >
                     {loadingAceitar ? (

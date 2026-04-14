@@ -31,7 +31,7 @@ function DashboardInstrutor() {
     pendente: "text-orange-500",
     recusada: "text-red-600",
     cancelada: "text-black",
-    aceitada: "text-green-600",
+    agendada: "text-green-600",
   };
 
   useEffect(() => {
@@ -85,11 +85,13 @@ function DashboardInstrutor() {
       setLoadingRejeitar(true);
       await axios.patch(
         `https://primeira-marcha-backend.vercel.app/aula/${aulaId}/rejeitar`,
+        {},
         { headers: { Authorization: `Bearer ${token}` } },
       );
     } catch (error) {
       alert("Erro ao rejeitar aula.");
       console.log(error.response ? error.response.data : error.message);
+      console.log(token);
     } finally {
       setLoadingRejeitar(false);
     }
@@ -102,14 +104,17 @@ function DashboardInstrutor() {
       setLoadingAceitar(true);
       await axios.patch(
         `https://primeira-marcha-backend.vercel.app/aula/${aulaId}/aceitar`,
+        {},
         { headers: { Authorization: `Bearer ${token}` } },
       );
-    } catch (error) {      alert("Erro ao aceitar aula.");
+    } catch (error) {
+      alert("Erro ao aceitar aula.");
       console.log(error.response ? error.response.data : error.message);
-    } finally {      setLoadingAceitar(false);
+    } finally {
+      setLoadingAceitar(false);
     }
   };
-  
+
   const handleAccept = (aulaId) => {
     if (
       window.confirm(
@@ -117,7 +122,7 @@ function DashboardInstrutor() {
       )
     ) {
       aceitarAula(aulaId);
-    };
+    }
   };
 
   const handleReject = (aulaId) => {
@@ -232,7 +237,11 @@ function DashboardInstrutor() {
                     </span>
                   </Stack>
                   <Button color="error" onClick={() => handleReject(aula.id)}>
-                    {loadingRejeitar ? <CircularProgress size={20} /> : "Rejeitar"}
+                    {loadingRejeitar ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      "Rejeitar"
+                    )}
                   </Button>
                   <Button
                     color="success"
@@ -240,7 +249,11 @@ function DashboardInstrutor() {
                       handleAccept(aula.id);
                     }}
                   >
-                   {loadingAceitar ? <CircularProgress size={20} /> : "Aceitar"}
+                    {loadingAceitar ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      "Aceitar"
+                    )}
                   </Button>
                   <Button>Reagendar</Button>
                 </ListItem>

@@ -6,11 +6,9 @@ import MeuModal from "../components/MeuModal";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { Button, DialogTitle, List } from "@mui/material";
-import { TextField } from "@mui/material";
+import { Button, DialogTitle, List, ListItem, TextField } from "@mui/material";
+import { Box, Stack } from "@mui/system";
 import { NumericFormat } from "react-number-format";
-import { ListItem } from "@mui/material";
-import { Stack } from "@mui/system";
 import { Delete } from "@mui/icons-material";
 import Profile from "../components/Profile";
 import { useEffect } from "react";
@@ -26,119 +24,125 @@ function DashboardInstrutor() {
   const [value3, setValue3] = React.useState("");
   const [aulas, setAulas] = React.useState([]);
 
-
-
-
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
-       
-      <Profile open={perfilOpen} onClose={() => setPerfilOpen(false)} tipo="instrutor" />
+      <Profile
+        open={perfilOpen}
+        onClose={() => setPerfilOpen(false)}
+        tipo="instrutor"
+      />
+
+      {/* Modal ajustado para ter espaçamento consistente */}
       <MeuModal open={horariosOpen} onClose={() => setHorariosOpen(false)}>
-        <DialogTitle>
-          Selecione o dia e horário disponíveis para aula
-        </DialogTitle>
-        Estou disponível para aulas em:
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DateTimePicker
-            label="Dia & Horário"
-            value={value1}
-            onChange={(newValue) => setValue1(newValue)}
-            disablePast
-            slotProps={{
-              textField: {
-                error: false,
-              },
-            }}
+        <DialogTitle>Disponibilidade de Aula</DialogTitle>
+        <Stack spacing={3} sx={{ p: 2 }}>
+          <p className="text-gray-600">
+            Selecione o intervalo de horário e o preço:
+          </p>
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DateTimePicker
+              label="Início"
+              value={value1}
+              onChange={(newValue) => setValue1(newValue)}
+              disablePast
+              slotProps={{ textField: { fullWidth: true } }}
+            />
+            <DateTimePicker
+              label="Término"
+              minDate={tomorrow}
+              disablePast
+              value={value2}
+              onChange={(newValue) => setValue2(newValue)}
+              slotProps={{ textField: { fullWidth: true } }}
+            />
+          </LocalizationProvider>
+
+          <NumericFormat
+            customInput={TextField}
+            label="Preço por aula"
+            variant="outlined"
+            thousandSeparator="."
+            decimalSeparator=","
+            prefix="R$ "
+            decimalScale={2}
+            fixedDecimalScale
+            allowNegative={false}
+            onValueChange={(values) => setValue3(values.floatValue)}
+            fullWidth
           />
-          até
-          <DateTimePicker
-            minDate={tomorrow}
-            disablePast
-            label="Dia & Horário"
-            value={value2}
-            onChange={(newValue) => setValue2(newValue)}
-            slotProps={{
-              textField: {
-                error: false,
-              },
+
+          <Button
+            onClick={() => {
+              setAulas([
+                ...aulas,
+                { dia1: value1, dia2: value2, preco: value3 },
+              ]);
+              setHorariosOpen(false);
             }}
-          />
-        </LocalizationProvider>
-        <NumericFormat
-          customInput={TextField}
-          label="Preço por aula"
-          variant="outlined"
-          thousandSeparator="."
-          decimalSeparator=","
-          prefix="R$ "
-          decimalScale={2}
-          fixedDecimalScale
-          allowNegative={false}
-          onValueChange={(values) => {
-            setValue3(values.floatValue);
-          }}
-        />
-        <Button
-          onClick={() => {
-            setAulas([...aulas, { dia1: value1, dia2: value2, preco: value3 }]);
-            setHorariosOpen(false);
-          }}
-          variant="contained"
-        >
-          Criar disponibilidade
-        </Button>
+            variant="contained"
+            fullWidth
+          >
+            Criar disponibilidade
+          </Button>
+        </Stack>
       </MeuModal>
 
-      <header className="flex gap-3 justify-center">
-       
+      {/* Header padronizado */}
+      <header className="flex gap-3 justify-center border-b pb-4">
         <Button onClick={() => navigator("/")}>Logout</Button>
         <Button onClick={() => setPerfilOpen(true)}>Perfil</Button>
       </header>
-      <div className="flex flex-row gap-10 justify-center p-3">
-        <div className="h-fit w-fit">
-          <h1>Aulas Criadas</h1>
-          <List className="flex flex-col gap-2 border-2 rounded p-2">
+
+      {/* Layout principal alinhado com o Dashboard do Aluno */}
+      <Box className="flex flex-col md:flex-row gap-10 justify-center p-3">
+        {/* Coluna de Listagem */}
+        <Box className="border rounded-lg p-4 min-w-75">
+          <h2 className="text-xl font-bold mb-4 text-center">Aulas Criadas</h2>
+          <List className="flex flex-col gap-2">
             {aulas.length === 0 ? (
-              <p className="text-center">Nenhuma aula criada</p>
+              <p className="text-center text-gray-500">Nenhuma aula criada</p>
             ) : (
               aulas.map((aula, index) => (
                 <ListItem
                   key={index}
-                  className="flex flex-row gap-2 justify-between"
+                  className="border-b flex justify-between gap-4 items-center"
                 >
-                  <Stack
-                    direction="row"
-                    gap={2}
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    {aula.dia1.format("DD/MM/YYYY HH:mm")} até{" "}
-                    {aula.dia2.format("DD/MM/YYYY HH:mm")} - R$ {aula.preco} por
-                    aula
+                  <Stack>
+                    <strong>R$ {aula.preco} / aula</strong>
+                    <span className="text-sm">
+                      {aula.dia1.format("DD/MM HH:mm")} até{" "}
+                      {aula.dia2.format("HH:mm")}
+                    </span>
                   </Stack>
-                  <Button>
-                    <Delete
-                      onClick={() => {
-                        const newAulas = [...aulas];
-                        newAulas.splice(index, 1);
-                        setAulas(newAulas);
-                      }}
-                    />
+                  <Button
+                    color="error"
+                    onClick={() => {
+                      const newAulas = [...aulas];
+                      newAulas.splice(index, 1);
+                      setAulas(newAulas);
+                    }}
+                  >
+                    <Delete />
                   </Button>
                 </ListItem>
               ))
             )}
           </List>
-        </div>
-        <Button 
-          variant="outlined"
-          color="neutral"
-          onClick={() => setHorariosOpen(true)}
-          className="p-2 border-2 rounded w-fit h-fit"
-        >
-          Criar uma aula
-        </Button>
-      </div>
+        </Box>
+
+        {/* Coluna de Ações (Botões Laterais) */}
+        <Stack direction="column" gap={2} justifyContent="center">
+          <Button
+            onClick={() => setHorariosOpen(true)}
+            variant="outlined"
+            size="large"
+          >
+            Criar uma aula
+          </Button>
+          {/* Espaço para outros botões que o instrutor possa ter futuramente */}
+        </Stack>
+      </Box>
     </div>
   );
 }

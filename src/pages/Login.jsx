@@ -39,7 +39,6 @@ function Login() {
       );
       
 
-      alert("Login realizado com sucesso!");
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("id", response.data.aluno._id);
@@ -51,7 +50,6 @@ function Login() {
           "https://primeira-marcha-backend.vercel.app/instrutor/login",
           formData,
         );
-        alert("Login realizado com sucesso!");
 
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("id", response.data.instrutor.id);

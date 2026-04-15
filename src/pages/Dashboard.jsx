@@ -9,7 +9,9 @@ import { Box, Stack } from "@mui/system";
 import { Delete } from "@mui/icons-material";
 import Profile from "../components/Profile";
 import MarcarAula from "../components/MarcarAula";
+import ReagendaAula from "../components/ReagendaAula";
 import { useEffect } from "react";
+import { Skeleton } from "@mui/material";
 
 function Dashboard() {
   const navigator = useNavigate();
@@ -19,7 +21,17 @@ function Dashboard() {
   const [carrinhoOpen, setCarrinhoOpen] = React.useState(false);
   const [aulas, setAulas] = React.useState([]);
   const [reserva, setReserva] = React.useState([]);
+  const [reagendamento, setReagendamento] = React.useState(false);
+  const [idSelecionado, setIdSelecionado] = React.useState(null);
+  const [skeletonLoading, setSkeletonLoading] = React.useState(true);
 
+  const statusColors = {
+    pendente: "text-orange-500",
+    recusada: "text-red-600",
+    cancelada: "text-black",
+    agendada: "text-green-600",
+    reagendada: "text-blue-600",
+  };
 
   useEffect(() => {
     const fetchAulasComInstrutor = async () => {
@@ -28,6 +40,7 @@ function Dashboard() {
       if (!token || !id) return;
 
       try {
+        setSkeletonLoading(true);
         const res = await axios.get(
           `https://primeira-marcha-backend.vercel.app/aulas/aluno/${id}`,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -40,7 +53,7 @@ function Dashboard() {
             try {
               const instrutorRes = await axios.get(
                 `https://primeira-marcha-backend.vercel.app/instrutor/${aula.instrutor}`,
-                 { headers: { Authorization: `Bearer ${token}` } },
+                { headers: { Authorization: `Bearer ${token}` } },
               );
 
               return {
@@ -61,6 +74,8 @@ function Dashboard() {
         setAulas(aulasComInstrutor);
       } catch (err) {
         console.error("Erro ao buscar aulas:", err);
+      } finally {
+        setSkeletonLoading(false);
       }
     };
 
@@ -69,12 +84,24 @@ function Dashboard() {
 
   return (
     <div className="h-full w-full flex flex-col gap-4 p-4">
-      <Profile open={perfilOpen} onClose={() => setPerfilOpen(false)} tipo="aluno" />
+      <Profile
+        open={perfilOpen}
+        onClose={() => setPerfilOpen(false)}
+        tipo="aluno"
+      />
 
       <MarcarAula
         open={marcarAulaOpen}
         onClose={() => setMarcarAulaOpen(false)}
       />
+
+      <ReagendaAula
+        open={reagendamento}
+        onClose={() => setReagendamento(false)}
+        aulaId={idSelecionado}
+      />
+
+     
 
       <MeuModal open={carrinhoOpen} onClose={() => setCarrinhoOpen(false)}>
         <DialogTitle>Seu Carrinho</DialogTitle>
@@ -117,7 +144,6 @@ function Dashboard() {
         </List>
       </MeuModal>
 
-
       <header className="flex gap-3 justify-center border-b pb-4">
         <Button onClick={() => navigator("/")}>Logout</Button>
         <Button onClick={() => setPerfilOpen(true)}>Perfil</Button>
@@ -127,30 +153,62 @@ function Dashboard() {
         <Box className="border rounded-lg p-4 min-w-75">
           <h2 className="text-xl font-bold mb-4 text-center">Próximas Aulas</h2>
           <List className="flex flex-col gap-2">
-            {aulas.length === 0 ? (
+            {skeletonLoading ? (
+              // Renderiza 3 itens de exemplo enquanto carrega
+              [1, 2, 3].map((n) => (
+                <ListItem
+                  key={n}
+                  className="border-b flex justify-between items-center gap-4 py-4"
+                >
+                  <Stack className="flex-1">
+                    <Skeleton animation="wave" variant="text" width="60%" height={25} />
+                    <Skeleton animation="wave" variant="text" width="40%" height={20} />
+                    <Skeleton animation="wave" variant="text" width="80%" height={20} />
+                    <Skeleton animation="wave" variant="rounded" width={60} height={15} />
+                  </Stack>
+                  <Skeleton
+                    variant="rectangular"
+                    width={100}
+                    height={35}
+                    className="rounded"
+                  />
+                </ListItem>
+              ))
+            ) : aulas.length === 0 ? (
               <p className="text-center text-gray-500">Nenhuma aula agendada</p>
             ) : (
               aulas.map((aula, index) => (
                 <ListItem
                   key={index}
-                  className="border-b flex justify-between gap-4"
+                  className="border-b flex justify-between items-center gap-4 py-4"
                 >
-                  <Stack>
+                  <Stack className="flex-1">
                     <strong>{`${aula.nomeInstrutor} - ${aula.valorInstrutor}R$`}</strong>
                     <span className="text-sm">
                       {dayjs(aula.dataInicio).format("DD/MM/YYYY HH:mm")}
                     </span>
                     <span>{aula.localAula}</span>
-                    <span className="text-sm">
-                      {aula.statusAula === "pendente" ? "Pendente" : aula.statusAula === "confirmada" ? "Confirmada" : "N/A"}
+                    <span
+                      className={`capitalize ${statusColors[aula.statusAula]} text-sm`}
+                    >
+                      {aula.statusAula}
                     </span>
                   </Stack>
+                  <Button
+                    variant="text"
+                    sx={{ minWidth: "100px" }}
+                    onClick={() => {
+                      setReagendamento(true);
+                      setIdSelecionado(aula._id);
+                    }}
+                  >
+                    Reagendar
+                  </Button>
                 </ListItem>
               ))
             )}
           </List>
         </Box>
-        
 
         <Stack direction="column" gap={2} justifyContent="center">
           <Button

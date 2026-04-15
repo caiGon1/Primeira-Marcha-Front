@@ -78,6 +78,7 @@ function Profile({ open, onClose, tipo }) {
       alert("Erro ao atualizar.");
     } finally {
       setLoading(false);
+       window.location.reload();
     }
   };
 

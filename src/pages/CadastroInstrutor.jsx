@@ -67,14 +67,9 @@ function CadastroInstrutor() {
         "https://primeira-marcha-backend.vercel.app/instrutor",
         formData,
       );
-      console.log("Resposta do servidor:", response.data);
-      alert("Cadastro realizado com sucesso!");
-      console.log(formData);
       navigator("/dashboard-instrutor");
     } catch (error) {
       console.error("Erro ao cadastrar condutor:", error);
-      console.log(formData);
-      console.log(error.response ? error.response.data : error.message);
       alert("Erro ao realizar cadastro.");
     } finally {
       setLoading(false);

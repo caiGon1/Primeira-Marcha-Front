@@ -1,37 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import * as React from "react";
-import { useEffect, useState } from "react"; // Adicione useState aqui
+import { useEffect, useState } from "react";
 import "@fontsource/inter";
-import MeuModal from "../components/MeuModal";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { Button, DialogTitle, List, ListItem, TextField } from "@mui/material";
+import { Button, List, ListItem } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import { NumericFormat } from "react-number-format";
 import Profile from "../components/Profile";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Skeleton } from "@mui/material";
 
 function DashboardInstrutor() {
-  const tomorrow = dayjs().add(1, "day");
   const navigator = useNavigate();
   const [perfilOpen, setPerfilOpen] = React.useState(false);
-  const [horariosOpen, setHorariosOpen] = React.useState(false);
-  const [value1, setValue1] = React.useState(dayjs(null));
-  const [value2, setValue2] = React.useState(dayjs(null));
-  const [value3, setValue3] = React.useState("");
-  const [aulas, setAulas] = React.useState([]);
   const [aulasAgendadas, setAulasAgendadas] = React.useState([]);
   const [loadingRejeitar, setLoadingRejeitar] = useState(false);
   const [loadingAceitar, setLoadingAceitar] = useState(false);
+  const [skeletonLoading, setSkeletonLoading] = useState(true);
 
   const statusColors = {
     pendente: "text-orange-500",
     recusada: "text-red-600",
     cancelada: "text-black",
     agendada: "text-green-600",
+    reagendada: "text-blue-600",
   };
 
   useEffect(() => {
@@ -41,6 +33,7 @@ function DashboardInstrutor() {
       if (!token || !id) return;
 
       try {
+        setSkeletonLoading(true);
         const res = await axios.get(
           `https://primeira-marcha-backend.vercel.app/aulas/instrutor/${id}`,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -72,6 +65,8 @@ function DashboardInstrutor() {
         setAulasAgendadas(aulasComAluno);
       } catch (err) {
         console.error("Erro ao buscar aulas:", err);
+      } finally {
+        setSkeletonLoading(false);
       }
     };
 
@@ -89,12 +84,11 @@ function DashboardInstrutor() {
         { headers: { Authorization: `Bearer ${token}` } },
       );
     } catch (error) {
-      alert("Erro ao rejeitar aula.");
       console.log(error.response ? error.response.data : error.message);
       console.log(token);
     } finally {
       setLoadingRejeitar(false);
-      window.location.reload(); 
+      window.location.reload();
     }
   };
 
@@ -109,32 +103,20 @@ function DashboardInstrutor() {
         { headers: { Authorization: `Bearer ${token}` } },
       );
     } catch (error) {
-      alert("Erro ao aceitar aula.");
+
       console.log(error.response ? error.response.data : error.message);
     } finally {
       setLoadingAceitar(false);
-      window.location.reload(); 
+      window.location.reload();
     }
   };
 
   const handleAccept = (aulaId) => {
-    if (
-      window.confirm(
-        "Tem certeza que deseja aceitar esta aula? Essa ação não pode ser desfeita.",
-      )
-    ) {
-      aceitarAula(aulaId);
-    }
+    aceitarAula(aulaId);
   };
 
   const handleReject = (aulaId) => {
-    if (
-      window.confirm(
-        "Tem certeza que deseja rejeitar esta aula? Essa ação não pode ser desfeita.",
-      )
-    ) {
-      rejeitarAula(aulaId);
-    }
+    rejeitarAula(aulaId);
   };
 
   return (
@@ -145,92 +127,57 @@ function DashboardInstrutor() {
         tipo="instrutor"
       />
 
-      {/* Modal ajustado para ter espaçamento consistente */}
-      <MeuModal open={horariosOpen} onClose={() => setHorariosOpen(false)}>
-        <DialogTitle>Disponibilidade de Aula</DialogTitle>
-        <Stack spacing={3} sx={{ p: 2 }}>
-          <p className="text-gray-600">
-            Selecione o intervalo de horário e o preço:
-          </p>
+      
 
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Início"
-              value={value1}
-              onChange={(newValue) => setValue1(newValue)}
-              disablePast
-              slotProps={{ textField: { fullWidth: true } }}
-            />
-            <DateTimePicker
-              label="Término"
-              minDate={tomorrow}
-              disablePast
-              value={value2}
-              onChange={(newValue) => setValue2(newValue)}
-              slotProps={{ textField: { fullWidth: true } }}
-            />
-          </LocalizationProvider>
-
-          <NumericFormat
-            customInput={TextField}
-            label="Preço por aula"
-            variant="outlined"
-            thousandSeparator="."
-            decimalSeparator=","
-            prefix="R$ "
-            decimalScale={2}
-            fixedDecimalScale
-            allowNegative={false}
-            onValueChange={(values) => setValue3(values.floatValue)}
-            fullWidth
-          />
-
-          <Button
-            onClick={() => {
-              setAulas([
-                ...aulas,
-                { dia1: value1, dia2: value2, preco: value3 },
-              ]);
-              setHorariosOpen(false);
-            }}
-            variant="contained"
-            fullWidth
-          >
-            Criar disponibilidade
-          </Button>
-        </Stack>
-      </MeuModal>
-
-      {/* Header padronizado */}
       <header className="flex gap-3 justify-center border-b pb-4">
         <Button onClick={() => navigator("/")}>Logout</Button>
         <Button onClick={() => setPerfilOpen(true)}>Perfil</Button>
       </header>
 
-      {/* Layout principal alinhado com o Dashboard do Aluno */}
       <Box className="flex flex-col md:flex-row gap-10 justify-center p-3">
-        {/* Coluna de Listagem */}
         <Box className="border rounded-lg p-4 min-w-75">
           <h2 className="text-xl font-bold mb-4 text-center">
             Aulas agendadas
           </h2>
           <List className="flex flex-col gap-2">
-            {aulasAgendadas.length === 0 ? (
+            {skeletonLoading ? (
+              [1, 2, 3].map((n) => (
+                <ListItem
+                  key={n}
+                  className="border-b flex justify-between gap-4 items-center py-4"
+                >
+                  <Stack className="flex-1">
+                    <Box className="flex items-center gap-2 mb-1">
+                      <Skeleton variant="text" width={100} height={25} />
+                      <Skeleton variant="rounded" width={70} height={20} />
+                    </Box>
+                    <Skeleton variant="text" width="50%" height={20} />
+                    <Skeleton variant="text" width="70%" height={20} />
+                  </Stack>
+
+                  {/* Simula os dois botões: Rejeitar e Aceitar */}
+                  <Box className="flex gap-2">
+                    <Skeleton variant="text" width={60} height={30} />
+                    <Skeleton variant="text" width={60} height={30} />
+                  </Box>
+                </ListItem>
+              ))
+            ) : aulasAgendadas.length === 0 ? (
               <p className="text-center text-gray-500">Nenhuma aula agendada</p>
             ) : (
               aulasAgendadas.map((aula, index) => (
                 <ListItem
                   key={index}
-                  className="border-b flex justify-between gap-4 items-center"
+                  className="border-b flex justify-between gap-4 items-center py-4"
                 >
-                  <Stack>
+                  <Stack className="flex-1">
                     <div>
-                      <strong className="mr-2">{aula.nomeAluno}</strong>
-                      <strong
-                        className={`${statusColors[aula.statusAula]} capitalize`}
+                      <strong className="mr-2 text-lg">{aula.nomeAluno}</strong>
+                      <span
+                        className={`capitalize font-bold ${statusColors[aula.statusAula?.toLowerCase()]} text-sm`}
                       >
                         {aula.statusAula?.toLowerCase()}
-                      </strong>
+                      </span>
                     </div>
                     <span className="text-sm text-gray-600">
                       {dayjs(aula.dataInicio).format("DD/MM/YYYY HH:mm")}
@@ -238,43 +185,36 @@ function DashboardInstrutor() {
                       {aula.localAula}
                     </span>
                   </Stack>
-                  <Button color="error" onClick={() => handleReject(aula._id)}>
-                    {loadingRejeitar ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      "Rejeitar"
-                    )}
-                  </Button>
-                  <Button
-                    color="success"
-                    onClick={() => {
-                      handleAccept(aula._id);
-                    }}
-                  >
-                    {loadingAceitar ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      "Aceitar"
-                    )}
-                  </Button>
-                  <Button>Reagendar</Button>
+
+                  <Box className="flex gap-2">
+                    <Button
+                      color="error"
+                      variant="text"
+                      onClick={() => handleReject(aula._id)}
+                    >
+                      {loadingRejeitar ? (
+                        <CircularProgress size={20} />
+                      ) : (
+                        "Rejeitar"
+                      )}
+                    </Button>
+                    <Button
+                      color="success"
+                      variant="text"
+                      onClick={() => handleAccept(aula._id)}
+                    >
+                      {loadingAceitar ? (
+                        <CircularProgress size={20} />
+                      ) : (
+                        "Aceitar"
+                      )}
+                    </Button>
+                  </Box>
                 </ListItem>
               ))
             )}
           </List>
         </Box>
-
-        {/* Coluna de Ações (Botões Laterais) */}
-        <Stack direction="column" gap={2} justifyContent="center">
-          <Button
-            onClick={() => setHorariosOpen(true)}
-            variant="outlined"
-            size="large"
-          >
-            Criar uma aula
-          </Button>
-          {/* Espaço para outros botões que o instrutor possa ter futuramente */}
-        </Stack>
       </Box>
     </div>
   );

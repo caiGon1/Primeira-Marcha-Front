@@ -12,8 +12,6 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import "@fontsource/inter";
 import CircularProgress from "@mui/material/CircularProgress";
 import TextField from "@mui/material/TextField";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { ListItemIcon } from "@mui/material";
 
 function MarcarAula({ open, onClose }) {
   const [loading, setLoading] = useState(false);
@@ -54,6 +52,7 @@ function MarcarAula({ open, onClose }) {
       console.log(error.response ? error.response.data : error.message);
     } finally {
       setLoading(false);
+      window.location.reload();
     }
   };
 
@@ -95,6 +94,7 @@ function MarcarAula({ open, onClose }) {
         );
 
         setInstrutores(filtrados);
+        
       } catch (error) {
         console.error("Erro ao buscar instrutores:", error);
       }
@@ -164,11 +164,11 @@ function MarcarAula({ open, onClose }) {
           {instrutores.map((instrutor) => (
             <ListItemButton
               key={instrutor.id}
-              // Se o ID for igual ao selecionado, ele aplica o estilo de destaque do MUI
+        
               selected={instrutorSelecionado?.id === instrutor.id}
               onClick={() => setInstrutorSelecionado(instrutor)}
               sx={{
-                // Opcional: Customizar a cor quando selecionado
+       
                 "&.Mui-selected": {
                   backgroundColor: "rgba(25, 118, 210, 0.16)",
                   "&:hover": {

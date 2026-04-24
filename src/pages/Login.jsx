@@ -66,7 +66,16 @@ function Login() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col md:flex-row items-center justify-center">
+    <div className="h-screen w-screen flex flex-col md:flex-row items-center justify-center ">
+      <img
+        src="/public/img/+.svg"
+        className="absolute top-10 left-1/2 translate-x-30 w-12 opacity-100 hidden md:block"
+      />
+      <img
+        src="public\img\Group-48.svg"
+        className="absolute bottom-0 -translate-x-20 w-40 opacity-100 hidden md:block"
+      />
+
       <MeuModal open={modalOpen} onClose={() => setModalOpen(false)}>
         <DialogTitle sx={{ pb: 0 }}>
           Bem vindo(a) ao Primeira Marcha!
@@ -116,7 +125,7 @@ function Login() {
             Não tem uma conta?{" "}
             <a
               onClick={() => setModalOpen(true)}
-              className="w-24 cursor-pointer font-bold"
+              className="w-24 cursor-pointer font-bold text-[#df7f01]"
             >
               Cadastre-se
             </a>
@@ -155,7 +164,10 @@ function Login() {
             />
 
             <div className="flex items-center flex-col p-4">
-              <a href="" className="font-poppins text-center text-sm">
+              <a
+                href=""
+                className="font-poppins text-center text-sm text-[#df7f01] font-bold "
+              >
                 Esqueci minha senha
               </a>
 

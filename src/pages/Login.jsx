@@ -93,25 +93,26 @@ function Login() {
       </MeuModal>
 
       <div
-        className="hidden md:flex bg-cover h-full w-8/14 items-center justify-center"
-        style={{ backgroundImage: "url('/public/img/Ellipse-17.png')" }}
+        className="hidden md:flex bg-cover h-full w-8/14 items-center justify-center 
+             bg-[url('/img/Ellipse-17.png')]"
       >
-        <img src="/public/img/Group-148.png" alt="" className="w-[650px] h-[650px]" />
+        <img src="/img/Group-148.png" alt="" className="w-[650px] h-[650px]" />
       </div>
+
       <Box
         className="p-4 rounded flex w-full md:w-2/4 h-full flex-col items-center justify-center gap-10 
-             md:bg-[url('/public/img/logotransparente.png')] md:bg-no-repeat md:bg-[position:95%_top] md:bg-[length:300px]"
+             md:bg-[url('/img/logotransparente.png')] md:bg-no-repeat md:bg-[position:95%_top] md:bg-[length:300px]"
       >
         <div className="text-center w-full max-w-md">
-          {" "}
           <img
-            src="/public/img/logotransparente.png"
+            src="/img/logotransparente.png"
             alt="logo"
             className="w-80 h-40 mb-6 mx-auto block md:hidden"
           />
+
           <h1 className="text-6xl font-poppins">LOGIN</h1>
+
           <h2 className="text-2xl mb-8 font-poppins">
-            {" "}
             Não tem uma conta?{" "}
             <a
               onClick={() => setModalOpen(true)}
@@ -120,14 +121,14 @@ function Login() {
               Cadastre-se
             </a>
           </h2>
+
           <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
             <TextField
-              id="outlined-email-input"
               label="Email"
               name="email"
               type="email"
               fullWidth
-              required={true}
+              required
               onChange={handleChange}
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -139,10 +140,10 @@ function Login() {
             />
 
             <HideShowPassword
-              required={true}
+              required
               name="senha"
               value={formData.senha}
-              fullWidth // Garante que o componente de senha siga o mesmo tamanho
+              fullWidth
               onChange={handleChange}
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -152,19 +153,19 @@ function Login() {
                 },
               }}
             />
-            <div className="flex items-center justify-centerl flex-col p-4">
+
+            <div className="flex items-center flex-col p-4">
               <a href="" className="font-poppins text-center text-sm">
                 Esqueci minha senha
               </a>
+
               <Button
                 className="border-2 rounded border-gray-400"
                 type="submit"
                 disabled={loading}
                 variant="outlined"
                 color="default"
-                sx={{
-                  width: "50%",
-                }}
+                sx={{ width: "50%" }}
               >
                 {loading ? <CircularProgress size={20} /> : "Login"}
               </Button>

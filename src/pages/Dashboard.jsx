@@ -101,8 +101,6 @@ function Dashboard() {
         aulaId={idSelecionado}
       />
 
-     
-
       <MeuModal open={carrinhoOpen} onClose={() => setCarrinhoOpen(false)}>
         <DialogTitle>Seu Carrinho</DialogTitle>
         <List>
@@ -154,17 +152,36 @@ function Dashboard() {
           <h2 className="text-xl font-bold mb-4 text-center">Próximas Aulas</h2>
           <List className="flex flex-col gap-2">
             {skeletonLoading ? (
-              // Renderiza 3 itens de exemplo enquanto carrega
               [1, 2, 3].map((n) => (
                 <ListItem
                   key={n}
                   className="border-b flex justify-between items-center gap-4 py-4"
                 >
                   <Stack className="flex-1">
-                    <Skeleton animation="wave" variant="text" width="60%" height={25} />
-                    <Skeleton animation="wave" variant="text" width="40%" height={20} />
-                    <Skeleton animation="wave" variant="text" width="80%" height={20} />
-                    <Skeleton animation="wave" variant="rounded" width={60} height={15} />
+                    <Skeleton
+                      animation="wave"
+                      variant="text"
+                      width="60%"
+                      height={25}
+                    />
+                    <Skeleton
+                      animation="wave"
+                      variant="text"
+                      width="40%"
+                      height={20}
+                    />
+                    <Skeleton
+                      animation="wave"
+                      variant="text"
+                      width="80%"
+                      height={20}
+                    />
+                    <Skeleton
+                      animation="wave"
+                      variant="rounded"
+                      width={60}
+                      height={15}
+                    />
                   </Stack>
                   <Skeleton
                     variant="rectangular"

@@ -5,7 +5,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
-export default function HideShowPassword({ label = "Senha", value, onChange, name }) {
+export default function HideShowPassword({ label = "Senha", value, onChange, name, sx }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -32,6 +32,7 @@ export default function HideShowPassword({ label = "Senha", value, onChange, nam
           </InputAdornment>
         ),
       }}
+      sx={sx}
     />
   );
 }

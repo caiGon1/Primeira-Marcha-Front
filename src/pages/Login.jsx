@@ -102,9 +102,11 @@ function Login() {
       </MeuModal>
 
       <div
-        className="hidden md:flex bg-cover h-full w-8/14 items-center justify-center 
+        className="hidden md:flex bg-cover h-full w-8/14 items-center justify-center flex-col
              bg-[url('/img/Ellipse-17.png')]"
       >
+        <h1 className="text-4xl font-poppins font-bold italic text-[#102542]">BEM-VINDO(A) AO</h1>
+        <img src="/img/pmlogo.png" alt="" />
         <img src="/img/Group-148.png" alt="" className="w-[650px] h-[650px]" />
       </div>
 
@@ -119,7 +121,7 @@ function Login() {
             className="w-80 h-40 mb-6 mx-auto block md:hidden"
           />
 
-          <h1 className="text-6xl font-poppins">LOGIN</h1>
+          <h1 className="text-6xl font-poppins font-bold italic">LOGIN</h1>
 
           <h2 className="text-2xl mb-8 font-poppins">
             Não tem uma conta?{" "}

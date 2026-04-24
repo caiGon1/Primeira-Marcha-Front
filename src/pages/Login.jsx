@@ -68,11 +68,11 @@ function Login() {
   return (
     <div className="h-screen w-screen flex flex-col md:flex-row items-center justify-center ">
       <img
-        src="/public/img/+.svg"
+        src="/img/+.svg"
         className="absolute top-10 left-1/2 translate-x-30 w-12 opacity-100 hidden md:block"
       />
       <img
-        src="public\img\Group-48.svg"
+        src="/img/Group-48.svg"
         className="absolute bottom-0 -translate-x-20 w-40 opacity-100 hidden md:block"
       />
 

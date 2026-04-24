@@ -94,18 +94,18 @@ function Login() {
 
       <div
         className="hidden md:flex bg-cover h-full w-8/14 items-center justify-center"
-        style={{ backgroundImage: "url('/img/ellipse 17.png')" }}
+        style={{ backgroundImage: "url('/public/img/Ellipse-17.png')" }}
       >
-        <img src="/img/Group 148.png" alt="" className="w-[650px] h-[650px]" />
+        <img src="/public/img/Group-148.png" alt="" className="w-[650px] h-[650px]" />
       </div>
       <Box
         className="p-4 rounded flex w-full md:w-2/4 h-full flex-col items-center justify-center gap-10 
-             md:bg-[url('/img/logotransparente.png')] md:bg-no-repeat md:bg-[position:95%_top] md:bg-[length:300px]"
+             md:bg-[url('/public/img/logotransparente.png')] md:bg-no-repeat md:bg-[position:95%_top] md:bg-[length:300px]"
       >
         <div className="text-center w-full max-w-md">
           {" "}
           <img
-            src="/img/logotransparente.png"
+            src="/public/img/logotransparente.png"
             alt="logo"
             className="w-80 h-40 mb-6 mx-auto block md:hidden"
           />

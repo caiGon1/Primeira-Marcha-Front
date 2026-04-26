@@ -4,9 +4,9 @@ import dayjs from "dayjs";
 import * as React from "react";
 import "@fontsource/inter";
 import MeuModal from "../components/MeuModal";
-import { Button, DialogTitle, List, ListItem } from "@mui/material";
+import { Button, DialogTitle, List, ListItem, Avatar } from "@mui/material";
 import { Box, Stack } from "@mui/system";
-import { Delete } from "@mui/icons-material";
+import { Delete, People, CalendarMonth, Assignment, Logout, Edit } from "@mui/icons-material";
 import Profile from "../components/Profile";
 import MarcarAula from "../components/MarcarAula";
 import ReagendaAula from "../components/ReagendaAula";
@@ -46,10 +46,10 @@ function Dashboard() {
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
-        const aulas = res.data;
+        const aulasData = res.data;
 
         const aulasComInstrutor = await Promise.all(
-          aulas.map(async (aula) => {
+          aulasData.map(async (aula) => {
             try {
               const instrutorRes = await axios.get(
                 `https://primeira-marcha-backend.vercel.app/instrutor/${aula.instrutor}`,
@@ -83,167 +83,131 @@ function Dashboard() {
   }, []);
 
   return (
-    <div className="h-full w-full flex flex-col gap-4 p-4">
-      <Profile
-        open={perfilOpen}
-        onClose={() => setPerfilOpen(false)}
-        tipo="aluno"
-      />
+    <div className="flex h-screen bg-white font-['Inter'] overflow-hidden">
+      <aside className="w-64 bg-[#FFFCF0] border-r border-gray-100 flex flex-col p-6 justify-between shrink-0">
+        <div>
+          <div className="mb-10 text-[#1A3B5D] font-black text-xl italic leading-tight uppercase">
+            PRIMEIRA <br/> MARCHA
+          </div>
+          <nav className="space-y-4">
+            <button className="flex items-center gap-3 w-full p-3 bg-[#FFF9C4] text-gray-700 rounded-l-full font-semibold border-l-4 border-yellow-500">
+              <People /> Instrutores
+            </button>
+            <button onClick={() => setMarcarAulaOpen(true)} className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg">
+              <CalendarMonth /> Agendar Aulas
+            </button>
+            <button onClick={() => setCarrinhoOpen(true)} className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg">
+              <Assignment /> Agendamentos
+            </button>
+            <button onClick={() => navigator("/")} className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg text-left">
+              <Logout /> Sair
+            </button>
+          </nav>
+        </div>
+        <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+          <p className="text-[10px] text-gray-500 mb-2">Desbloquear Recursos Premium Apenas R$12,90 Mensalmente</p>
+          <button className="w-full py-2 bg-[#FFD54F] text-white rounded-lg font-bold text-sm shadow-md">Go Premium</button>
+        </div>
+      </aside>
 
-      <MarcarAula
-        open={marcarAulaOpen}
-        onClose={() => setMarcarAulaOpen(false)}
-      />
+      <main className="flex-1 relative overflow-y-auto p-10 bg-white">
+        <header className="flex justify-between items-center mb-10">
+          <h1 className="text-gray-400 font-bold uppercase tracking-widest text-sm">Tela de Instrutores</h1>
+          <div className="relative cursor-pointer" onClick={() => setPerfilOpen(true)}>
+            <Avatar sx={{ width: 56, height: 56 }} />
+            <div className="absolute bottom-0 right-0 bg-orange-500 p-1 rounded-full text-white scale-75 border-2 border-white">
+              <Edit style={{ fontSize: 16 }} />
+            </div>
+          </div>
+        </header>
 
-      <ReagendaAula
-        open={reagendamento}
-        onClose={() => setReagendamento(false)}
-        aulaId={idSelecionado}
-      />
+        <div className="flex justify-around items-start pt-10 min-h-[600px]">
+          {[0, 1, 2].map((lane) => (
+            <div key={lane} className="relative flex flex-col items-center gap-12 min-w-[200px]">
+              <div className="absolute top-[-200px] w-16 h-[2000px] bg-[#4A4A4A] z-0 flex justify-center shadow-2xl">
+                <div className="w-1 h-full border-l-2 border-dashed border-yellow-400 opacity-70"></div>
+              </div>
 
-      <MeuModal open={carrinhoOpen} onClose={() => setCarrinhoOpen(false)}>
-        <DialogTitle>Seu Carrinho</DialogTitle>
-        <List>
-          {reserva.length === 0 ? (
-            <p className="p-4 text-center">Seu carrinho está vazio</p>
-          ) : (
-            reserva.map((item, index) => (
-              <ListItem key={index} sx={{ gap: 2 }}>
-                <Box sx={{ flexGrow: 1 }}>
-                  {item.professor} - R$ {item.preco}
-                </Box>
-                <Button
-                  color="error"
-                  onClick={() => {
-                    setReserva(reserva.filter((_, i) => i !== index));
-                  }}
-                >
-                  <Delete />
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setAulas(
-                      aulas.map((a) =>
-                        a.professor === item.professor
-                          ? { ...a, reservada: false }
-                          : a,
-                      ),
-                    );
-                    setReserva(reserva.filter((_, i) => i !== index));
-                    setCarrinhoOpen(false);
-                  }}
-                >
-                  Pagar
-                </Button>
-              </ListItem>
-            ))
-          )}
-        </List>
-      </MeuModal>
+              {/* Exemplo de Card baseado na imagem */}
+              <div className="z-10 bg-white rounded-2xl shadow-xl w-52 overflow-hidden transform transition hover:-translate-y-1">
+                <div className={`${lane === 1 ? 'bg-sky-200' : 'bg-orange-300'} h-20 flex justify-center pt-4`}>
+                   <Avatar sx={{ width: 60, height: 60, border: '3px solid white' }} />
+                </div>
+                <div className="p-5 text-center">
+                  <h3 className={`text-xs font-bold uppercase ${lane === 1 ? 'text-sky-500' : 'text-orange-500'}`}>KAIQUE SOUSA</h3>
+                  <p className="text-[10px] text-gray-400 mt-1">Zona Norte<br/>Freguesia do Ó</p>
+                  <button onClick={() => setMarcarAulaOpen(true)} className={`mt-4 w-full py-2 ${lane === 1 ? 'bg-sky-400' : 'bg-orange-400'} text-white rounded-full text-[10px] font-bold shadow-md`}>
+                    Agendar
+                  </button>
+                </div>
+              </div>
 
-      <header className="flex gap-3 justify-center border-b pb-4">
-        <Button onClick={() => navigator("/")}>Logout</Button>
-        <Button onClick={() => setPerfilOpen(true)}>Perfil</Button>
-      </header>
+              <div className="z-10 bg-white rounded-2xl shadow-xl w-52 overflow-hidden transform transition hover:-translate-y-1">
+                <div className={`${lane === 1 ? 'bg-sky-100' : 'bg-pink-300'} h-20 flex justify-center pt-4`}>
+                   <Avatar sx={{ width: 60, height: 60, border: '3px solid white' }} />
+                </div>
+                <div className="p-5 text-center">
+                  <h3 className={`text-xs font-bold uppercase ${lane === 1 ? 'text-sky-400' : 'text-pink-500'}`}>CARLOS</h3>
+                  <p className="text-[10px] text-gray-400 mt-1">Zona Norte<br/>Bom Retiro</p>
+                  <button onClick={() => setMarcarAulaOpen(true)} className={`mt-4 w-full py-2 ${lane === 1 ? 'bg-sky-400' : 'bg-pink-400'} text-white rounded-full text-[10px] font-bold shadow-md`}>
+                    Agendar
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-      <Box className="flex flex-col md:flex-row gap-10 justify-center p-3">
-        <Box className="border rounded-lg p-4 min-w-75">
-          <h2 className="text-xl font-bold mb-4 text-center">Próximas Aulas</h2>
-          <List className="flex flex-col gap-2">
-            {skeletonLoading ? (
-              [1, 2, 3].map((n) => (
-                <ListItem
-                  key={n}
-                  className="border-b flex justify-between items-center gap-4 py-4"
-                >
-                  <Stack className="flex-1">
-                    <Skeleton
-                      animation="wave"
-                      variant="text"
-                      width="60%"
-                      height={25}
-                    />
-                    <Skeleton
-                      animation="wave"
-                      variant="text"
-                      width="40%"
-                      height={20}
-                    />
-                    <Skeleton
-                      animation="wave"
-                      variant="text"
-                      width="80%"
-                      height={20}
-                    />
-                    <Skeleton
-                      animation="wave"
-                      variant="rounded"
-                      width={60}
-                      height={15}
-                    />
-                  </Stack>
-                  <Skeleton
-                    variant="rectangular"
-                    width={100}
-                    height={35}
-                    className="rounded"
-                  />
-                </ListItem>
-              ))
-            ) : aulas.length === 0 ? (
-              <p className="text-center text-gray-500">Nenhuma aula agendada</p>
+        <Profile
+          open={perfilOpen}
+          onClose={() => setPerfilOpen(false)}
+          tipo="aluno"
+        />
+
+        <MarcarAula
+          open={marcarAulaOpen}
+          onClose={() => setMarcarAulaOpen(false)}
+        />
+
+        <ReagendaAula
+          open={reagendamento}
+          onClose={() => setReagendamento(false)}
+          aulaId={idSelecionado}
+        />
+
+        <MeuModal open={carrinhoOpen} onClose={() => setCarrinhoOpen(false)}>
+          <DialogTitle>Seu Carrinho</DialogTitle>
+          <List>
+            {reserva.length === 0 ? (
+              <p className="p-4 text-center">Seu carrinho está vazio</p>
             ) : (
-              aulas.map((aula, index) => (
-                <ListItem
-                  key={index}
-                  className="border-b flex justify-between items-center gap-4 py-4"
-                >
-                  <Stack className="flex-1">
-                    <strong>{`${aula.nomeInstrutor} - ${aula.valorInstrutor}R$`}</strong>
-                    <span className="text-sm">
-                      {dayjs(aula.dataInicio).format("DD/MM/YYYY HH:mm")}
-                    </span>
-                    <span>{aula.localAula}</span>
-                    <span
-                      className={`capitalize ${statusColors[aula.statusAula]} text-sm`}
-                    >
-                      {aula.statusAula}
-                    </span>
-                  </Stack>
+              reserva.map((item, index) => (
+                <ListItem key={index} sx={{ gap: 2 }}>
+                  <Box sx={{ flexGrow: 1 }}>
+                    {item.professor} - R$ {item.preco}
+                  </Box>
                   <Button
-                    variant="text"
-                    sx={{ minWidth: "100px" }}
+                    color="error"
                     onClick={() => {
-                      setReagendamento(true);
-                      setIdSelecionado(aula._id);
+                      setReserva(reserva.filter((_, i) => i !== index));
                     }}
                   >
-                    Reagendar
+                    <Delete />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setCarrinhoOpen(false);
+                    }}
+                  >
+                    Pagar
                   </Button>
                 </ListItem>
               ))
             )}
           </List>
-        </Box>
-
-        <Stack direction="column" gap={2} justifyContent="center">
-          <Button
-            onClick={() => setMarcarAulaOpen(true)}
-            variant="outlined"
-            size="large"
-          >
-            Agendar uma aula
-          </Button>
-          <Button
-            onClick={() => setCarrinhoOpen(true)}
-            variant="outlined"
-            color="secondary"
-          >
-            Ver Carrinho ({reserva.length})
-          </Button>
-        </Stack>
-      </Box>
+        </MeuModal>
+      </main>
     </div>
   );
 }

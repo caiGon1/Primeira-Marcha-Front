@@ -103,7 +103,6 @@ function DashboardInstrutor() {
         { headers: { Authorization: `Bearer ${token}` } },
       );
     } catch (error) {
-
       console.log(error.response ? error.response.data : error.message);
     } finally {
       setLoadingAceitar(false);
@@ -127,10 +126,16 @@ function DashboardInstrutor() {
         tipo="instrutor"
       />
 
-      
-
       <header className="flex gap-3 justify-center border-b pb-4">
-        <Button onClick={() => navigator("/")}>Logout</Button>
+        <Button
+          onClick={() => {
+            localStorage.removeItem("token");
+            localStorage.removeItem("id");
+            navigator("/");
+          }}
+        >
+          Logout
+        </Button>
         <Button onClick={() => setPerfilOpen(true)}>Perfil</Button>
       </header>
 

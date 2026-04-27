@@ -27,173 +27,191 @@ function Dashboard() {
   const [aulas, setAulas] = React.useState([]);
   const [reserva, setReserva] = React.useState([]);
   const [instrutores, setInstrutores] = React.useState([]);
+  const [scrollAtivo, setScrollAtivo] = React.useState(false);
+  const [exibirLimite, setExibirLimite] = React.useState(6);
+
   const [reagendamento, setReagendamento] = React.useState(false);
   const [idSelecionado, setIdSelecionado] = React.useState(null);
   const [skeletonLoading, setSkeletonLoading] = React.useState(true);
   const [user, setUser] = React.useState({});
+  const colunas = [[], [], []];
 
-  // 1. Efeito para carregar os dados do Aluno
   useEffect(() => {
     const fetchAluno = async () => {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
-      
       if (!token || !id) return;
-
       try {
         const response = await axios.get(
           `https://primeira-marcha-backend.vercel.app/aluno/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } },
         );
         setUser(response.data);
       } catch (error) {
         console.error("Erro ao buscar dados do aluno:", error);
       }
     };
-
     fetchAluno();
   }, []);
 
-  // 2. Efeito para buscar instrutores (agora dispara automaticamente quando o user.UF é setado)
   useEffect(() => {
     if (!user || !user.UF) return;
-
     const fetchInstrutores = async () => {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.get(
           "https://primeira-marcha-backend.vercel.app/instrutores",
-          { headers: { Authorization: `Bearer ${token}` } }
+          { headers: { Authorization: `Bearer ${token}` } },
         );
-
-        const filtrados = response.data
-          .filter((instrutor) => instrutor.UF === user.UF)
-          .slice(0, 6);
-
+        const filtrados = response.data.filter(
+          (instrutor) => instrutor.UF === user.UF,
+        );
         setInstrutores(filtrados);
       } catch (error) {
         console.error("Erro ao buscar instrutores:", error);
       }
     };
-
     fetchInstrutores();
   }, [user]);
 
-  // 3. Efeito para buscar aulas
-  useEffect(() => {
-    const fetchAulasComInstrutor = async () => {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      if (!token || !id) return;
+  instrutores.slice(0, exibirLimite).forEach((instrutor, index) => {
+    colunas[index % 3].push(instrutor);
+  });
 
-      try {
-        setSkeletonLoading(true);
-        const res = await axios.get(
-          `https://primeira-marcha-backend.vercel.app/aulas/aluno/${id}`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        const aulasData = res.data;
-        const aulasComInstrutor = await Promise.all(
-          aulasData.map(async (aula) => {
-            try {
-              const instrutorRes = await axios.get(
-                `https://primeira-marcha-backend.vercel.app/instrutor/${aula.instrutor}`,
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
-              return { ...aula, nomeInstrutor: instrutorRes.data.nome, valorInstrutor: instrutorRes.data.valorAula };
-            } catch {
-              return { ...aula, nomeInstrutor: "Instrutor Desconhecido", valorInstrutor: "N/A" };
-            }
-          })
-        );
-        setAulas(aulasComInstrutor);
-      } catch (err) {
-        console.error("Erro ao buscar aulas:", err);
-      } finally {
-        setSkeletonLoading(false);
-      }
-    };
-    fetchAulasComInstrutor();
-  }, []);
-
-  // ... rest of the component remains the same
   return (
-    // ... seu JSX continua igual
     <div className="flex h-screen bg-white font-['Inter'] overflow-hidden">
-      {/* ... aside ... */}
       <aside className="w-64 bg-[#FFFCF0] border-r border-gray-100 flex flex-col p-6 justify-between shrink-0">
-        <div>
-          <div className="mb-10 text-[#1A3B5D] font-black text-xl italic leading-tight uppercase">
-            PRIMEIRA <br /> MARCHA
-          </div>
-          <nav className="space-y-4">
-            <button className="flex items-center gap-3 w-full p-3 bg-[#FFF9C4] text-gray-700 rounded-l-full font-semibold border-l-4 border-yellow-500">
-              <People /> Instrutores
-            </button>
-            <button onClick={() => setMarcarAulaOpen(true)} className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg">
-              <CalendarMonth /> Agendar Aulas
-            </button>
-            <button onClick={() => setCarrinhoOpen(true)} className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg">
-              <Assignment /> Agendamentos
-            </button>
-            <button onClick={() => navigator("/")} className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg text-left">
-              <Logout /> Sair
-            </button>
-          </nav>
+        <div className="mb-10 text-[#1A3B5D] font-black text-xl italic leading-tight uppercase">
+          <img src="img/pmlogo.png" alt="" />
         </div>
+        <nav className="space-y-4">
+          <button className="flex items-center gap-3 w-full p-3 bg-[#FFF9C4] text-gray-700 rounded-l-full font-semibold border-l-4 border-yellow-500">
+            <People /> Instrutores
+          </button>
+          <button
+            onClick={() => setMarcarAulaOpen(true)}
+            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg"
+          >
+            <CalendarMonth /> Agendar Aulas
+          </button>
+          <button
+            onClick={() => setCarrinhoOpen(true)}
+            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg"
+          >
+            <Assignment /> Agendamentos
+          </button>
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("id");
+              navigator("/");
+            }}
+            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg text-left"
+          >
+            <Logout /> Sair
+          </button>
+        </nav>
       </aside>
 
-      <main className="flex-1 relative overflow-y-auto p-10 bg-white">
+      <main
+        className={`flex-1 relative p-10 bg-white ${scrollAtivo ? "overflow-y-auto" : ""}`}
+      >
         <header className="flex justify-between items-center mb-10">
           <h1 className="text-gray-400 font-bold uppercase tracking-widest text-sm">
             Instrutores disponíveis
           </h1>
-          <div className="relative cursor-pointer" onClick={() => setPerfilOpen(true)}>
+          <div
+            className="relative cursor-pointer"
+            onClick={() => setPerfilOpen(true)}
+          >
             <Avatar sx={{ width: 56, height: 56 }} />
-            <div className="absolute bottom-0 right-0 bg-orange-500 p-1 rounded-full text-white scale-75 border-2 border-white">
-              <Edit style={{ fontSize: 16 }} />
-            </div>
           </div>
         </header>
 
-        <div className="flex justify-around items-start pt-10 min-h-[600px]">
-          {[0, 1, 2].map((laneIndex) => (
-            <div key={laneIndex} className="relative flex flex-col items-center gap-12 min-w-[200px]">
-              <div className="absolute top-[-200px] w-16 h-[2000px] bg-[#4A4A4A] z-0 flex justify-center shadow-2xl">
-                <div className="w-1 h-full border-l-2 border-dashed border-yellow-400 opacity-70"></div>
-              </div>
+        <div className="flex flex-col items-center">
+          <div className="flex justify-around items-start pt-10 w-full">
+            {[0, 1, 2].map((laneIndex) => (
+              <div
+                key={laneIndex}
+                className="relative flex flex-col items-center gap-12 min-w-50 min-h-[600px]"
+              >
+                <div className="absolute top-0 w-16 h-screen bg-[#4A4A4A] z-0 flex justify-center shadow-2xl">
+                  <div className="w-1 h-full border-l-2 border-dashed border-yellow-400 opacity-70"></div>
+                </div>
 
-              {instrutores
-                .filter((_, i) => i % 3 === laneIndex)
-                .map((instrutor) => (
-                  <div key={instrutor._id} className="z-10 bg-white rounded-2xl shadow-xl w-52 overflow-hidden transform transition hover:-translate-y-1">
-                    <div className={`${laneIndex === 1 ? "bg-sky-200" : "bg-orange-300"} h-20 flex justify-center pt-4`}>
-                      <Avatar sx={{ width: 60, height: 60, border: "3px solid white" }} />
+                {colunas[laneIndex].map((instrutor) => (
+                  <div
+                    key={instrutor._id}
+                    className="z-10 bg-white rounded-2xl shadow-xl w-52 overflow-hidden transform transition hover:-translate-y-1"
+                  >
+                    <div
+                      className={`${
+                        laneIndex === 1 ? "bg-sky-200" : "bg-orange-300"
+                      } h-20 flex justify-center pt-4`}
+                    >
+                      <Avatar
+                        sx={{
+                          width: 60,
+                          height: 60,
+                          border: "3px solid white",
+                        }}
+                      />
                     </div>
+
                     <div className="p-5 text-center">
-                      <h3 className={`text-xs font-bold uppercase ${laneIndex === 1 ? "text-sky-500" : "text-orange-500"}`}>
+                      <h3
+                        className={`text-xs font-bold uppercase ${
+                          laneIndex === 1 ? "text-sky-500" : "text-orange-500"
+                        }`}
+                      >
                         {instrutor.nome}
                       </h3>
+
                       <p className="text-[10px] text-gray-400 mt-1">
-                        {instrutor.cidade}<br />{instrutor.UF}
+                        {instrutor.cidade}
+                        <br />
+                        {instrutor.UF}
                       </p>
-                      <button onClick={() => setMarcarAulaOpen(true)} className={`mt-4 w-full py-2 ${laneIndex === 1 ? "bg-sky-400" : "bg-orange-400"} text-white rounded-full text-[10px] font-bold shadow-md`}>
+
+                      <button
+                        onClick={() => setMarcarAulaOpen(true)}
+                        className={`mt-4 w-full py-2 ${
+                          laneIndex === 1 ? "bg-sky-400" : "bg-orange-400"
+                        } text-white rounded-full text-[10px] font-bold shadow-md`}
+                      >
                         Agendar
                       </button>
                     </div>
                   </div>
                 ))}
-            </div>
-          ))}
+              </div>
+            ))}
+          </div>
+
+          {exibirLimite < instrutores.length && (
+            <button
+              onClick={() => {
+                setExibirLimite((prev) => prev + 6);
+                setScrollAtivo(true);
+              }}
+              className="relative z-10 mt-10 mb-20 px-8 py-3 bg-gray-100 text-gray-600 font-bold rounded-full hover:bg-gray-200 transition"
+            >
+              Ver mais instrutores
+            </button>
+          )}
         </div>
 
-        {/* ... modais ... */}
-        <Profile open={perfilOpen} onClose={() => setPerfilOpen(false)} tipo="aluno" />
-        <MarcarAula open={marcarAulaOpen} onClose={() => setMarcarAulaOpen(false)} />
-        <ReagendaAula open={reagendamento} onClose={() => setReagendamento(false)} aulaId={idSelecionado} />
+        <Profile
+          open={perfilOpen}
+          onClose={() => setPerfilOpen(false)}
+          tipo="aluno"
+        />
+        <MarcarAula
+          open={marcarAulaOpen}
+          onClose={() => setMarcarAulaOpen(false)}
+        />
         <MeuModal open={carrinhoOpen} onClose={() => setCarrinhoOpen(false)}>
-           {/* ... conteúdo do carrinho ... */}
+          <DialogTitle>Seu Carrinho</DialogTitle>
         </MeuModal>
       </main>
     </div>

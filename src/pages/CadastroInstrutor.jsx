@@ -70,6 +70,8 @@ function CadastroInstrutor() {
       navigator("/dashboard-instrutor");
     } catch (error) {
       console.error("Erro ao cadastrar condutor:", error);
+      console.log("Dados enviados:", formData);
+      console.log("Resposta do servidor:", error.response);
       alert("Erro ao realizar cadastro.");
     } finally {
       setLoading(false);
@@ -169,7 +171,7 @@ function CadastroInstrutor() {
             <TextField
               required={true}
               label="Credencial Detran"
-              type="number"
+              type="text"
               onChange={handleChange}
               name="credencialDetran"
               value={formData.credencialDetran}

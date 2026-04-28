@@ -14,6 +14,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
+import { motion } from "framer-motion";
 
 function CadastroCondutor() {
   const navigator = useNavigate();
@@ -80,6 +81,12 @@ function CadastroCondutor() {
   };
 
   return (
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 0 }}
+      transition={{ duration: 0.4 }}
+    >
     <div className="h-screen w-screen flex items-center justify-center">
       <ArrowBackIosIcon
         className="absolute top-4 left-4 cursor-pointer"
@@ -264,7 +271,8 @@ function CadastroCondutor() {
         </h1>
         <img src="/img/Group-81.svg" className="w-1/2" />
       </div>
-    </div>
+      </div>
+      </motion.div>
   );
 }
 

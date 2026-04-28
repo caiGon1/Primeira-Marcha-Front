@@ -14,6 +14,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 function CadastroInstrutor() {
   const navigator = useNavigate();
@@ -79,6 +80,12 @@ function CadastroInstrutor() {
   };
 
   return (
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 0 }}
+      transition={{ duration: 0.4 }}
+    >
    <div className="h-screen w-screen flex items-center justify-center">
   <ArrowBackIosIcon
     className="absolute top-4 left-4 cursor-pointer"
@@ -248,7 +255,8 @@ function CadastroInstrutor() {
 
     <img src="/img/Group-81.svg" className="w-1/2" />
   </div>
-</div>
+      </div>
+      </motion.div>
   );
 }
 

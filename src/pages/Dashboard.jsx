@@ -18,6 +18,7 @@ import MarcarAula from "../components/MarcarAula";
 import ReagendaAula from "../components/ReagendaAula";
 import { useEffect } from "react";
 import Skeleton from "@mui/material/Skeleton";
+import { motion } from "framer-motion";
 
 function Dashboard() {
   const navigator = useNavigate();
@@ -78,6 +79,12 @@ function Dashboard() {
   });
 
   return (
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 0 }}
+      transition={{ duration: 0.4 }}
+    >
     <div className="flex h-screen bg-white font-['Inter'] overflow-hidden">
       <MarcarAula
         open={marcarAulaOpen}
@@ -240,7 +247,8 @@ function Dashboard() {
           <Logout /> Sair
         </button>
       </div>
-    </div>
+      </div>
+      </motion.div>
   );
 }
 

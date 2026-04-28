@@ -124,7 +124,7 @@ function Dashboard() {
       </aside>
 
       {/* MAIN COM SCROLL INDEPENDENTE */}
-      <main className="flex-1 relative bg-white overflow-y-auto pb-24 md:pb-0">
+      <main className="flex-1 relative bg-white overflow-y-auto  md:pb-0">
         
         {/* CONTAINER DA ESTRADA QUE CRESCE COM O CONTEÚDO */}
         <div className="relative min-h-full w-full">
@@ -143,7 +143,7 @@ function Dashboard() {
           {/* ESTRADA MOBILE */}
           <div className="md:hidden absolute inset-0 w-full flex justify-center pointer-events-none z-0">
             <div className="w-16 h-full bg-[#4A4A4A] flex justify-center">
-              <div className="w-1 h-full border-l-2 border-dashed border-yellow-400 opacity-70"></div>
+              <div className="w-0 h-full border-l-2 border-dashed border-yellow-400 opacity-70"></div>
             </div>
           </div>
 

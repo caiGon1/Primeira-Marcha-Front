@@ -17,6 +17,7 @@ import Profile from "../components/Profile";
 import MarcarAula from "../components/MarcarAula";
 import ReagendaAula from "../components/ReagendaAula";
 import { useEffect } from "react";
+import Skeleton from "@mui/material/Skeleton";
 
 function Dashboard() {
   const navigator = useNavigate();
@@ -58,17 +59,23 @@ function Dashboard() {
     if (!user || !user.UF) return;
     const fetchInstrutores = async () => {
       const token = localStorage.getItem("token");
+      setSkeletonLoading(true);
+
       try {
         const response = await axios.get(
           "https://primeira-marcha-backend.vercel.app/instrutores",
           { headers: { Authorization: `Bearer ${token}` } },
         );
+
         const filtrados = response.data.filter(
           (instrutor) => instrutor.UF === user.UF,
         );
+
         setInstrutores(filtrados);
       } catch (error) {
         console.error("Erro ao buscar instrutores:", error);
+      } finally {
+        setSkeletonLoading(false);
       }
     };
     fetchInstrutores();
@@ -85,18 +92,18 @@ function Dashboard() {
           <img src="img/pmlogo.png" alt="" />
         </div>
         <nav className="space-y-4">
-          <button className="flex items-center gap-3 w-full p-3 bg-[#FFF9C4] text-gray-700 rounded-l-full font-semibold border-l-4 border-yellow-500">
+          <button className="flex items-center gap-3 w-full p-3 bg-[#FFF9C4] text-gray-700 hover:cursor-pointer rounded-l-full font-semibold border-l-4 border-yellow-500">
             <People /> Instrutores
           </button>
           <button
             onClick={() => setMarcarAulaOpen(true)}
-            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg"
+            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 hover:cursor-pointer transition rounded-lg"
           >
             <CalendarMonth /> Agendar Aulas
           </button>
           <button
             onClick={() => setCarrinhoOpen(true)}
-            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg"
+            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50  hover:cursor-pointer transition rounded-lg"
           >
             <Assignment /> Agendamentos
           </button>
@@ -106,40 +113,73 @@ function Dashboard() {
               localStorage.removeItem("id");
               navigator("/");
             }}
-            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 transition rounded-lg text-left"
+            className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 hover:cursor-pointer transition rounded-lg text-left"
           >
             <Logout /> Sair
           </button>
         </nav>
       </aside>
 
-      <main
-        className={`flex-1 relative p-10 bg-white ${scrollAtivo ? "overflow-y-auto" : ""}`}
+      <main className="flex-1 relative bg-white min-h-screen">
+  
+  {/* 🚗 ESTRADAS */}
+  <div className="absolute inset-0 w-full h-full flex justify-around pointer-events-none z-0">
+    {[0, 1, 2].map((_, i) => (
+      <div key={i} className="w-16 h-full bg-[#4A4A4A] flex justify-center">
+        <div className="w-1 h-full border-l-2 border-dashed border-yellow-400 opacity-70"></div>
+      </div>
+    ))}
+  </div>
+
+  {/* CONTEÚDO */}
+  <div className="relative z-10 p-10">
+    
+    <header className="flex justify-between items-center mb-10">
+      <h1 className="text-gray-400 font-bold uppercase tracking-widest text-sm">
+        Instrutores
+      </h1>
+      <div
+        className="relative cursor-pointer"
+        onClick={() => setPerfilOpen(true)}
       >
-        <header className="flex justify-between items-center mb-10">
-          <h1 className="text-gray-400 font-bold uppercase tracking-widest text-sm">
-            Instrutores disponíveis
-          </h1>
+        <Avatar sx={{ width: 56, height: 56 }} />
+      </div>
+    </header>
+
+    <div className="flex flex-col items-center">
+      <div className="flex justify-around items-start pt-10 w-full">
+        
+        {[0, 1, 2].map((laneIndex) => (
           <div
-            className="relative cursor-pointer"
-            onClick={() => setPerfilOpen(true)}
+            key={laneIndex}
+            className="relative flex flex-col items-center gap-12 min-w-50"
           >
-            <Avatar sx={{ width: 56, height: 56 }} />
-          </div>
-        </header>
+            
+            {skeletonLoading
+              ? Array.from({ length: 2 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="z-10 bg-white rounded-2xl shadow-xl w-52 overflow-hidden"
+                  >
+                    <div className="h-20 flex justify-center items-center">
+                      <Skeleton variant="circular" width={60} height={60} />
+                    </div>
 
-        <div className="flex flex-col items-center">
-          <div className="flex justify-around items-start pt-10 w-full">
-            {[0, 1, 2].map((laneIndex) => (
-              <div
-                key={laneIndex}
-                className="relative flex flex-col items-center gap-12 min-w-50 min-h-[600px]"
-              >
-                <div className="absolute top-0 w-16 h-screen bg-[#4A4A4A] z-0 flex justify-center shadow-2xl">
-                  <div className="w-1 h-full border-l-2 border-dashed border-yellow-400 opacity-70"></div>
-                </div>
+                    <div className="p-5 flex flex-col items-center gap-2">
+                      <Skeleton width="80%" height={15} />
+                      <Skeleton width="60%" height={10} />
+                      <Skeleton width="40%" height={10} />
 
-                {colunas[laneIndex].map((instrutor) => (
+                      <Skeleton
+                        variant="rounded"
+                        width="100%"
+                        height={30}
+                        className="mt-3"
+                      />
+                    </div>
+                  </div>
+                ))
+              : colunas[laneIndex].map((instrutor) => (
                   <div
                     key={instrutor._id}
                     className="z-10 bg-white rounded-2xl shadow-xl w-52 overflow-hidden transform transition hover:-translate-y-1"
@@ -161,7 +201,9 @@ function Dashboard() {
                     <div className="p-5 text-center">
                       <h3
                         className={`text-xs font-bold uppercase ${
-                          laneIndex === 1 ? "text-sky-500" : "text-orange-500"
+                          laneIndex === 1
+                            ? "text-sky-500"
+                            : "text-orange-500"
                         }`}
                       >
                         {instrutor.nome}
@@ -177,43 +219,33 @@ function Dashboard() {
                         onClick={() => setMarcarAulaOpen(true)}
                         className={`mt-4 w-full py-2 ${
                           laneIndex === 1 ? "bg-sky-400" : "bg-orange-400"
-                        } text-white rounded-full text-[10px] font-bold shadow-md`}
+                        } text-white rounded-full text-[10px] font-bold shadow-md hover:cursor-pointer transition"
+        >`}
                       >
                         Agendar
                       </button>
                     </div>
                   </div>
                 ))}
-              </div>
-            ))}
           </div>
+        ))}
+      </div>
 
-          {exibirLimite < instrutores.length && (
-            <button
-              onClick={() => {
-                setExibirLimite((prev) => prev + 6);
-                setScrollAtivo(true);
-              }}
-              className="relative z-10 mt-10 mb-20 px-8 py-3 bg-gray-100 text-gray-600 font-bold rounded-full hover:bg-gray-200 transition"
-            >
-              Ver mais instrutores
-            </button>
-          )}
-        </div>
+      {exibirLimite < instrutores.length && (
+        <button
+          onClick={() => {
+            setExibirLimite((prev) => prev + 6);
+            setScrollAtivo(true);
+          }}
+          className=" relative z-10 mt-10 mb-20 px-8 py-3 bg-gray-100 text-gray-600 font-bold rounded-full hover:bg-gray-200 hover:cursor-pointer transition"
+        >
+          Ver mais instrutores
+        </button>
+      )}
+    </div>
 
-        <Profile
-          open={perfilOpen}
-          onClose={() => setPerfilOpen(false)}
-          tipo="aluno"
-        />
-        <MarcarAula
-          open={marcarAulaOpen}
-          onClose={() => setMarcarAulaOpen(false)}
-        />
-        <MeuModal open={carrinhoOpen} onClose={() => setCarrinhoOpen(false)}>
-          <DialogTitle>Seu Carrinho</DialogTitle>
-        </MeuModal>
-      </main>
+  </div>
+</main>
     </div>
   );
 }

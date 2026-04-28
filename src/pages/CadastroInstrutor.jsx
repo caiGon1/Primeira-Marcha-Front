@@ -79,124 +79,176 @@ function CadastroInstrutor() {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center">
-      <ArrowBackIosIcon
-        className="absolute top-4 left-4 cursor-pointer"
-        onClick={() => navigator("/")}
-      />
-      <form autoComplete="off" onSubmit={handleSubmit}>
-        <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center border-2 border-gray-400">
-          <Stack spacing={2}>
-            <TextField
-              required={true}
-              label="Nome Completo"
-              type="text"
-              onChange={handleChange}
-              name="nome"
-            ></TextField>
-            <TextField
-              required={true}
-              label="Email"
-              type="email"
-              onChange={handleChange}
-              name="email"
-            ></TextField>
+   <div className="h-screen w-screen flex items-center justify-center">
+  <ArrowBackIosIcon
+    className="absolute top-4 left-4 cursor-pointer"
+    onClick={() => navigator("/")}
+  />
 
-            <CPFField name="cpf" value={formData.cpf} onChange={handleChange} />
+  {/* elementos decorativos */}
+  <img
+    src="/img/+.svg"
+    className="absolute top-10 left-1/2 -translate-x-30 w-12 opacity-100 hidden md:block"
+  />
+  <img
+    src="/img/Group-48.svg"
+    className="absolute bottom-0 translate-x-40 w-40 opacity-100 hidden md:block"
+  />
 
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Data de Nascimento"
-                disableFuture
-                onChange={(value) => {
-                  setFormData({
-                    ...formData,
-                    dataNasc: value ? value.format("YYYY-MM-DD") : "",
-                  });
-                }}
-                name="dataNasc"
-              />
-            </LocalizationProvider>
+  {/* lado esquerdo */}
+  <div className="md:bg-[url('/img/logotransparente.png')] md:bg-no-repeat md:bg-[position:10%_0%]   md:bg-[length:250px] h-screen w-full md:w-1/2 flex items-center justify-center">
+    
+    <form autoComplete="off" onSubmit={handleSubmit}>
+      <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center">
+        
+        <Stack spacing={2}>
+          <h1 className="text-4xl font-poppins font-bold text-center">
+            CADASTRO
+          </h1>
 
-          </Stack>
-          <Stack spacing={2}>
-            <TextField
-              name="UF"
-              label="UF"
-              required={true}
-              select
-              value={uf}
-              onChange={(e) => {
-                handleChange(e);
-                setUf(e.target.value);
-              }}
-            >
-              {ufs.map((estados) => (
-                <MenuItem key={estados.sigla} value={estados.sigla}>
-                  {estados.sigla}
-                </MenuItem>
-              ))}
-            </TextField>
+          <h2 className="text-2xl font-poppins font-bold text-center">
+            Possui uma conta?{" "}
+            <a className="text-[rgba(227,126,30,1)]" href="/">
+              Conecte-se
+            </a>
+          </h2>
 
-            <Autocomplete
-              name="cidade"
-              disabled={!uf}
-              required={true}
-              options={cidades.map((cidade) => cidade.nome)}
-              onChange={(event, value) => {
+          <TextField
+            required
+            label="Nome Completo"
+            name="nome"
+            onChange={handleChange}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
+          />
+
+          <TextField
+            required
+            label="Email"
+            name="email"
+            onChange={handleChange}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
+          />
+
+          <CPFField
+            name="cpf"
+            value={formData.cpf}
+            onChange={handleChange}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
+          />
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Data de Nascimento"
+              disableFuture
+              onChange={(value) =>
                 setFormData({
                   ...formData,
-                  cidade: value || "",
-                });
+                  dataNasc: value ? value.format("YYYY-MM-DD") : "",
+                })
+              }
+              slotProps={{
+                textField: {
+                  InputProps: { sx: { borderRadius: "30px" } },
+                },
               }}
-              renderInput={(params) => (
-                <TextField {...params} label="Cidade" required={true} />
-              )}
             />
-          </Stack>
-          <Stack spacing={2}>
-            <HideShowPassword
-              name="senha"
-              value={formData.senha}
-              onChange={handleChange}
-            />
-            <TextField
-              required={true}
-              label="Número da CNH"
-              type="number"
-              onChange={handleChange}
-              name="cnh"
-              value={formData.cnh}
-            ></TextField>
-            <TextField
-              required={true}
-              label="Credencial Detran"
-              type="text"
-              onChange={handleChange}
-              name="credencialDetran"
-              value={formData.credencialDetran}
-            ></TextField>
+          </LocalizationProvider>
+        </Stack>
 
-            <TextField
-              required={true}
-              label="Valor por aula"
-              type="number"
-              onChange={handleChange}
-              name="valorAula"
-              value={formData.valorAula}
-            ></TextField>
-          </Stack>
-          <Button
-            variant="outlined"
-            color="neutral"
-            type="submit"
-            disabled={loading}
+        <Stack spacing={2}>
+          <TextField
+            name="UF"
+            label="UF"
+            select
+            required
+            value={uf}
+            onChange={(e) => {
+              handleChange(e);
+              setUf(e.target.value);
+            }}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
           >
-            {loading ? <CircularProgress size={20} /> : "Cadastrar"}
-          </Button>
-        </Box>
-      </form>
-    </div>
+            {ufs.map((estado) => (
+              <MenuItem key={estado.sigla} value={estado.sigla}>
+                {estado.sigla}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <Autocomplete
+            disabled={!uf}
+            options={cidades.map((cidade) => cidade.nome)}
+            onChange={(e, value) =>
+              setFormData({ ...formData, cidade: value || "" })
+            }
+            renderInput={(params) => (
+              <TextField {...params} label="Cidade" required />
+            )}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
+          />
+        </Stack>
+
+        <Stack spacing={2}>
+          <HideShowPassword
+            name="senha"
+            value={formData.senha}
+            onChange={handleChange}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
+          />
+
+          <TextField
+            label="Número da CNH"
+            name="cnh"
+            value={formData.cnh}
+            onChange={handleChange}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
+          />
+
+          <TextField
+            label="Credencial Detran"
+            name="credencialDetran"
+            value={formData.credencialDetran}
+            onChange={handleChange}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
+          />
+
+          <TextField
+            label="Valor por aula"
+            name="valorAula"
+            value={formData.valorAula}
+            onChange={handleChange}
+            sx={{ "& .MuiOutlinedInput-root fieldset": { borderRadius: "30px" } }}
+          />
+        </Stack>
+
+        <Button
+          variant="outlined"
+          type="submit"
+          disabled={loading}
+          sx={{
+            borderRadius: "30px",
+            width: "75%",
+            alignSelf: "center",
+          }}
+        >
+          {loading ? <CircularProgress size={20} /> : "Cadastrar"}
+        </Button>
+      </Box>
+    </form>
+  </div>
+
+  {/* lado direito */}
+  <div className="hidden md:flex bg-cover h-full w-1/2 items-center justify-center flex-col bg-[url('/img/Ellipse-18.svg')]">
+    <h1 className="text-4xl font-poppins font-bold text-center text-white">
+      JÁ POSSUI UMA CONTA? <br />
+      <span className="text-2xl">
+        Caso já possua uma conta, clique em "Conecte-se" <br />e preencha os dados
+      </span>
+    </h1>
+
+    <img src="/img/Group-81.svg" className="w-1/2" />
+  </div>
+</div>
   );
 }
 

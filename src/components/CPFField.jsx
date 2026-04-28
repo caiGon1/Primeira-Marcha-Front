@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 
-function CPFField({ value, onChange, name }) {
+function CPFField({ value, onChange, name, sx }) {
 
   const formatCPF = (value) => {
     value = value.replace(/\D/g, "");
@@ -32,6 +32,7 @@ function CPFField({ value, onChange, name }) {
       onChange={handleChange}
       inputProps={{ inputMode: "numeric" }}
       fullWidth
+      sx={sx}
     />
   );
 }

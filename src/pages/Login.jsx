@@ -179,7 +179,12 @@ function Login() {
                 disabled={loading}
                 variant="outlined"
                 color="default"
-                sx={{ width: "50%" }}
+                 sx={
+                {
+                     borderRadius: "30px",
+                  width: "50%",
+                }
+              }
               >
                 {loading ? <CircularProgress size={20} /> : "Login"}
               </Button>

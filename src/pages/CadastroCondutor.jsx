@@ -68,6 +68,7 @@ function CadastroCondutor() {
       alert("Cadastro realizado com sucesso!");
       console.log(formData);
       navigator("/dashboard");
+
     } catch (error) {
       console.error("Erro ao cadastrar condutor:", error);
       console.log(formData);

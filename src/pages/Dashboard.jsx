@@ -86,7 +86,11 @@ function Dashboard() {
   });
 
   return (
+    
+
     <div className="flex h-screen bg-white font-['Inter'] overflow-hidden">
+      <MarcarAula open={marcarAulaOpen} onClose={() => setMarcarAulaOpen(false)} />
+        <Profile open={perfilOpen} onClose={()=> setPerfilOpen(false)} tipo={"aluno"}/>
       <aside className="w-64 bg-[#FFFCF0] border-r border-gray-100 flex flex-col p-6 justify-between shrink-0">
         <div className="mb-10 text-[#1A3B5D] font-black text-xl italic leading-tight uppercase">
           <img src="img/pmlogo.png" alt="" />
@@ -140,10 +144,10 @@ function Dashboard() {
       </h1>
       <div
         className="relative cursor-pointer"
-        onClick={() => setPerfilOpen(true)}
+        
       >
-        <Avatar sx={{ width: 56, height: 56 }} />
-      </div>
+        <Avatar onClick={() => setPerfilOpen(true)} sx={{ width: 56, height: 56 }} />
+      </div> 
     </header>
 
     <div className="flex flex-col items-center">

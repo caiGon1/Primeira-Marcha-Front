@@ -27,6 +27,8 @@ import Profile from "../components/Profile";
 import MarcarAula from "../components/MarcarAula";
 import ReagendaAula from "../components/ReagendaAula";
 import { useEffect } from "react";
+import { Stack } from "@mui/system";
+import BrokenImageIcon from '@mui/icons-material/BrokenImage';
 
 dayjs.locale("pt-br");
 
@@ -167,7 +169,7 @@ function DashboardAgendamentos() {
               <People /> Instrutores
             </button>
             <button
-              onClick={() => setMarcarAulaOpen(true)}
+              onClick={() => navigator("/dashboard-marcar")}
               className="hover:cursor-pointer flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 rounded-lg"
             >
               <CalendarMonth /> Agendar Aulas
@@ -266,8 +268,8 @@ function DashboardAgendamentos() {
                       </div>
                     </div>
 
-                    <div className="w-full h-[1px] bg-gray-100 mb-6" />
-
+                    <div className="w-full h-px bg-gray-100 mb-6" />
+                  <Stack>
                     <div className="flex flex-col md:flex-row gap-4 md:gap-12 text-center mb-6 justify-center">
                       <div>
                         <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
@@ -290,14 +292,20 @@ function DashboardAgendamentos() {
                             .format("HH:mm")}
                         </p>
                       </div>
-                    </div>
+                      </div>
+                      <div className="mb-2">
+                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
+                          {aula.localAula}
+                        </p>
+                      </div>
+                      </Stack>
 
                     {aula.statusAula !== "recusada" &&
                       aula.statusAula !== "cancelada" && (
                         <div className="flex flex-col md:flex-row gap-3 md:gap-4 w-full mt-2 justify-center">
                           <Button
                             variant="contained"
-                            className="!bg-[#FFF3E0] text-orange-600! !shadow-none !border !border-orange-100 !font-bold !rounded-xl !px-4 md:!px-6 !py-2 hover:cursor-pointer"
+                            className="bg-[#FFF3E0]! text-orange-600! shadow-none! border! border-orange-100! font-bold! rounded-xl! px-4! md:px-6! py-2! hover:cursor-pointer"
                             startIcon={<Edit />}
                             onClick={() => {
                               setReagendamento(true);
@@ -311,7 +319,7 @@ function DashboardAgendamentos() {
                               handleCancel(aula._id);
                             }}
                             variant="outlined"
-                            className="!border-red-200 !text-red-500 !font-bold !rounded-xl !px-4 md:!px-6 !py-2 hover:!bg-red-50 hover:cursor-pointer"
+                            className="border-red-200! text-red-500! font-bold! rounded-xl! px-4! md:px-6! py-2! hover:bg-red-50! hover:cursor-pointer"
                             startIcon={<DeleteForever />}
                           >
                             {loadingCancelar ? (
@@ -337,7 +345,7 @@ function DashboardAgendamentos() {
             <People /> Instrutores
           </button>
           <button
-            onClick={() => setMarcarAulaOpen(true)}
+          onClick={() => navigator("/dashboard-marcar")}
             className="flex flex-col items-center text-gray-600 text-xs"
           >
             <CalendarMonth /> Agendar

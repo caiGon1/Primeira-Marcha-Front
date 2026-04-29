@@ -6,6 +6,7 @@ import CadastroCondutor from "./pages/CadastroCondutor";
 import DashboardInstrutor from "./pages/DashboardInstrutor";
 import { AnimatePresence } from "framer-motion";
 import DashboardAgendamentos from "./pages/DashboardAgendamentos";
+import DashboardMarcar from "./pages/DashboardMarcar";
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -18,7 +19,8 @@ function AnimatedRoutes() {
           <Route path='/dashboard-instrutor' element={<DashboardInstrutor />} />
           <Route path="/cadastrar-instrutor" element={<CadastroInstrutor />} />
         <Route path="/cadastrar-condutor" element={<CadastroCondutor />} />
-        <Route path="/dashboard-aulas" element={<DashboardAgendamentos/>}></Route>
+        <Route path="/dashboard-aulas" element={<DashboardAgendamentos />}></Route>
+        <Route path="/dashboard-marcar" element={<DashboardMarcar/>}></Route>
         </Routes>
     </AnimatePresence>
   );

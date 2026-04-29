@@ -112,7 +112,7 @@ function Dashboard() {
             <CalendarMonth /> Agendar Aulas
           </button>
           <button
-            onClick={() => setCarrinhoOpen(true)}
+           onClick={() => { navigator("/dashboard-aulas") }}
             className="flex items-center gap-3 w-full p-3 text-gray-500 hover:bg-gray-50 hover:cursor-pointer transition rounded-lg"
           >
             <Assignment /> Agendamentos
@@ -233,7 +233,7 @@ function Dashboard() {
         <button onClick={() => setMarcarAulaOpen(true)} className="flex flex-col items-center text-gray-600 text-xs">
           <CalendarMonth /> Agendar
         </button>
-        <button onClick={() => setCarrinhoOpen(true)} className="flex flex-col items-center text-gray-600 text-xs">
+          <button onClick={() => { navigator("/dashboard-aulas") }} className="flex flex-col items-center text-gray-600 text-xs">
           <Assignment /> Aulas
         </button>
         <button

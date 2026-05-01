@@ -314,6 +314,7 @@ function DashboardAgendamentos() {
                           >
                             Adiar aula
                           </Button>
+                          
                           <Button
                             onClick={() => {
                               handleCancel(aula._id);
@@ -328,8 +329,15 @@ function DashboardAgendamentos() {
                               "Cancelar aula"
                             )}
                           </Button>
-                        </div>
-                      )}
+                      </div>
+                    )}
+                    {aula.statusAula === "agendada" && (
+                      <div className="flex flex-col items-center gap-2 mt-4">
+                        <Button color="success" variant="contained" startIcon={<Check />} >
+                          Pagar
+                        </Button>
+                      </div>
+                    )}
                   </Box>
                 ))
               )}

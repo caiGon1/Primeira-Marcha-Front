@@ -3,7 +3,7 @@ import axios from "axios";
 import * as React from "react";
 import "@fontsource/inter";
 import { Avatar } from "@mui/material";
-
+import { styled } from "@mui/material/styles";
 import {
   Delete,
   People,
@@ -23,6 +23,7 @@ import { ptBR } from "@mui/x-date-pickers/locales";
 import "dayjs/locale/pt-br";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
 function DashboardMarcar() {
   const navigator = useNavigate();
@@ -37,7 +38,7 @@ function DashboardMarcar() {
   const [dataSelecionada, setDataSelecionada] = useState(dayjs());
   const [instrutorSelecionado, setInstrutorSelecionado] = useState(null);
   const [selecionado, setSelecionado] = useState(false);
-  const [horario, setHorario] = useState("");
+  const [horario, setHorario] = useState(null);
 
   const colunas = [[], [], []];
 
@@ -157,7 +158,6 @@ function DashboardMarcar() {
             transition={{ type: "spring", stiffness: 45, damping: 15 }}
             className="flex-1 h-full relative overflow-y-auto z-10"
           >
-            {/* 🛠️ CONTAINER QUE CRESCE COM O CONTEÚDO (Igual ao código de exemplo) */}
             <div className="relative min-h-full w-full">
               {/* 🛣️ Fundo da Estrada que acompanha o scroll sem cortar */}
               <div className="absolute inset-0 w-full justify-between pointer-events-none z-0 flex">
@@ -244,7 +244,9 @@ function DashboardMarcar() {
                                   {instrutor.valorAula}R$
                                 </p>
                                 <button
-                                  onClick={() => setInstrutorSelecionado(instrutor._id)}
+                                  onClick={() =>
+                                    setInstrutorSelecionado(instrutor._id)
+                                  }
                                   className={`mt-4 w-full py-2 ${laneIndex === 1 ? "bg-sky-400" : "bg-orange-400"} text-white rounded-full text-[10px] font-bold shadow-md hover:cursor-pointer transition`}
                                 >
                                   Selecionar{" "}
@@ -306,25 +308,28 @@ function DashboardMarcar() {
                 </div>
 
                 {/* Controles de horário */}
-                {selecionado &&  (
+                {selecionado && (
                   <motion.div
                     initial={{ opacity: 0, y: 15 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mt-2 pt-4 border-t border-gray-100 flex items-center justify-between"
+                    className="mt-2 pt-4 border-t border-gray-100 flex items-middle justify-between"
                   >
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                         Horário
                       </span>
-                      <select
-                        value={horario}
-                        onChange={(e) => setHorario(e.target.value)}
-                        className="bg-gray-50 border border-gray-200 rounded-xl p-2 text-xs font-semibold mt-1 outline-none text-gray-700 cursor-pointer"
+                      <LocalizationProvider
+                        dateAdapter={AdapterDayjs}
+                        adapterLocale="pt-br"
                       >
-                        <option value="">Selecione</option>
-                        <option value="08:00 - 12:00">08:00 - 12:00</option>
-                        <option value="13:00 - 17:00">13:00 - 17:00</option>
-                      </select>
+                          <TimePicker
+                            value={horario}
+                            onChange={(newValue) => setHorario(newValue)}
+ 
+                            disablePast={dataSelecionada.isSame(dayjs(), "day")}
+                            sx={{ width: 150 }}
+                          />
+                      </LocalizationProvider>
                     </div>
 
                     <button

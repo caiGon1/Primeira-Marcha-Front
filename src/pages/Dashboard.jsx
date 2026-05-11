@@ -44,12 +44,14 @@ function Dashboard() {
           { headers: { Authorization: `Bearer ${token}` } },
         );
         setUser(response.data);
+        
       } catch (error) {
         console.error("Erro ao buscar dados do aluno:", error);
       }
     };
     fetchAluno();
   }, []);
+
 
   useEffect(() => {
     if (!user || !user.UF) return;

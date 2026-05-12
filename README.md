@@ -20,23 +20,16 @@ Esta plataforma foi criada para **facilitar esse novo modelo**, conectando **alu
 ### 👤 Para Condutores (Alunos)
 
 * Cadastro e login na plataforma
-* Busca por **instrutores disponíveis por data e horário**
-* Visualização de **preço da aula e localização do instrutor**
+* Busca por **instrutores disponíveis**
+* Visualização de **preço da aula**
 * **Agendamento de aulas práticas**
 * Pagamento diretamente pela plataforma
-* Sistema de **mensagens com o instrutor**
 
 ### 👨‍🏫 Para Instrutores
 
 * Cadastro e gerenciamento de perfil
-* Definição de **disponibilidade de horários**
 * Definição do **valor da aula**
 * Recebimento e gerenciamento de agendamentos
-* Comunicação direta com os alunos
-
-### 💬 Comunicação
-
-A aplicação possui um sistema de **mensagens internas**, permitindo que **instrutores e condutores conversem diretamente** para alinhar detalhes da aula.
 
 ## 🎯 Objetivo do Projeto
 

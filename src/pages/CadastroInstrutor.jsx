@@ -103,7 +103,7 @@ function CadastroInstrutor() {
   />
 
   {/* lado esquerdo */}
-  <div className="md:bg-[url('/img/logotransparente.png')] md:bg-no-repeat md:bg-[position:10%_0%]   md:bg-[length:250px] h-screen w-full md:w-1/2 flex items-center justify-center">
+  <div className="md:bg-[url('/img/logotransparente.png')] md:bg-no-repeat md:bg-position-[10%_0%]   md:bg-size-[250px] h-screen w-full md:w-1/2 flex items-center justify-center">
     
     <form autoComplete="off" onSubmit={handleSubmit}>
       <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center">

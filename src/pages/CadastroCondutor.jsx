@@ -1,3 +1,5 @@
+//Imports de bibliotecas e componentes necessários para o funcionamento da página de cadastro do condutor.
+
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
@@ -16,13 +18,13 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { motion } from "framer-motion";
 
+
 function CadastroCondutor() {
   const navigator = useNavigate();
   const [uf, setUf] = useState("");
   const [ufs, setUFs] = useState([]);
   const [cidades, setCidades] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [formData, setFormData] = useState({
     nome: "",
     email: "",
@@ -102,7 +104,7 @@ function CadastroCondutor() {
         className="absolute bottom-0 translate-x-40 w-40 opacity-100 hidden md:block"
       />
     
-      <div className="md:bg-[url('/img/logotransparente.png')] md:bg-no-repeat md:bg-[position:10%_0%] md:bg-[length:250px] h-screen w-1/2 flex items-center justify-center">
+      <div className="md:bg-[url('/img/logotransparente.png')] md:bg-no-repeat md:bg-position-[10%_0%] md:bg-size-[250px] h-screen w-1/2 flex items-center justify-center">
      
         <form autoComplete="off" onSubmit={handleSubmit}>
           <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center ">

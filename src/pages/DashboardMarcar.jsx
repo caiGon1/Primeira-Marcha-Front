@@ -450,13 +450,13 @@ function DashboardMarcar() {
             layout
             className={`flex items-center justify-center p-6 z-20 transition-all duration-500 ${
               selecionado
-                ? "w-[440px] relative"
+                ? "w-110 relative"
                 : "absolute inset-0 w-full h-full bg-gray-50/30"
             }`}
           >
             <motion.div
               layout
-              className="bg-white border border-gray-100 rounded-[32px] p-6 shadow-2xl w-full max-w-sm flex flex-col justify-between min-h-[460px]"
+              className="bg-white border border-gray-100 rounded-4xl p-6 shadow-2xl w-full max-w-sm flex flex-col justify-between min-h-115"
             >
               <div className="flex flex-col h-full justify-between">
                 <div>

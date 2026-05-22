@@ -98,6 +98,16 @@ function DashboardMarcar() {
   };
 
   useEffect(() => {
+    if (!inputEndereco || inputEndereco.length < 3) return;
+
+    const timeout = setTimeout(() => {
+      buscarEndereco(inputEndereco);
+    }, 700); // tempo após parar de digitar
+
+    return () => clearTimeout(timeout);
+  }, [inputEndereco]);
+
+  useEffect(() => {
     const fetchAluno = async () => {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
@@ -213,7 +223,6 @@ function DashboardMarcar() {
             onInputChange={(event, newInputValue) => {
               setInputEndereco(newInputValue);
               setLocalDaAula(newInputValue);
-              buscarEndereco(newInputValue);
             }}
             onChange={(event, newValue) => {
               const val = newValue ? newValue.display_name : inputEndereco;
@@ -241,7 +250,7 @@ function DashboardMarcar() {
           <Button
             variant="contained"
             color="primary"
-            disabled={!localDaAula || loading}
+            disabled={loading}
             onClick={() => marcarAula()}
           >
             {loading ? (
@@ -459,6 +468,7 @@ function DashboardMarcar() {
                   >
                     <div className="flex flex-col items-center gap-4 bg-white p-4 rounded-lg shadow">
                       <DateCalendar
+                        disablePast={true}
                         value={dataSelecionada}
                         onChange={handleDateChange}
                       />
@@ -537,6 +547,7 @@ function DashboardMarcar() {
               onChange={(newDate) => {
                 handleDateChange(newDate);
               }}
+              disablePast={true}
               sx={{ width: "100%" }}
             />
           </LocalizationProvider>
@@ -842,7 +853,6 @@ function DashboardMarcar() {
           onInputChange={(event, newInputValue) => {
             setInputEndereco(newInputValue);
             setLocalDaAula(newInputValue);
-            buscarEndereco(newInputValue);
           }}
           onChange={(event, newValue) => {
             const val = newValue ? newValue.display_name : inputEndereco;
@@ -865,7 +875,9 @@ function DashboardMarcar() {
                 ),
               }}
               sx={{
-                "& .MuiOutlinedInput-root": { borderRadius: "16px" },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "16px",
+                },
               }}
             />
           )}

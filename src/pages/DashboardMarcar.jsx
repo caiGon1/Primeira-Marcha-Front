@@ -959,33 +959,33 @@ function DashboardMarcar() {
         </AnimatePresence>
       </div>
 
-      <div className="shrink-0 bg-white border-t border-gray-100 flex justify-around items-center py-2">
-        <button
-          onClick={() => navigator("/dashboard")}
-          className="flex flex-col items-center text-gray-400 text-[10px] gap-0.5"
-        >
-          <People fontSize="small" /> Instrutores
-        </button>
-        <button className="flex flex-col items-center text-[#EAA15F] text-[10px] gap-0.5 font-bold">
-          <CalendarMonth fontSize="small" /> Agendar
-        </button>
-        <button
-          onClick={() => navigator("/dashboard-aulas")}
-          className="flex flex-col items-center text-gray-400 text-[10px] gap-0.5"
-        >
-          <Assignment fontSize="small" /> Aulas
-        </button>
-        <button
-          onClick={() => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("id");
-            navigator("/");
-          }}
-          className="flex flex-col items-center text-red-400 text-[10px] gap-0.5"
-        >
-          <Logout fontSize="small" /> Sair
-        </button>
-      </div>
+  <div className=" bottom-0 left-0 right-0 bg-white border-t shadow-lg flex justify-around items-center py-3 z-50">
+          <button
+            onClick={() => navigator("/dashboard")}
+            className="flex flex-col items-center text-gray-600 text-xs"
+          >
+            <People /> Instrutores
+          </button>
+          <button
+            className="flex flex-col items-center text-gray-600 text-xs"
+          >
+            <CalendarMonth /> Agendar
+          </button>
+          <button onClick={()=>navigator("/dashboard-aulas")} className="flex flex-col items-center text-gray-600 text-xs">
+            <Assignment /> Aulas
+          </button>
+          <button
+            onClick={() => {
+              localStorage.clear();
+              navigator("/");
+            }}
+            className="flex flex-col items-center text-red-500 text-xs"
+          >
+            <Logout /> Sair
+          </button>
+        </div>
+
+      
 
       <Profile
         open={perfilOpen}

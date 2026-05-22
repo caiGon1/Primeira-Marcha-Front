@@ -163,8 +163,8 @@ function DashboardInstrutor() {
     }
   };
 
-  return (
-    <motion.div
+  const DashboardInstrutor = (
+ <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -430,6 +430,18 @@ function DashboardInstrutor() {
           </button>
         </div>
       </div>
+    </motion.div>
+
+  )
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      { DashboardInstrutor }
     </motion.div>
   );
 }

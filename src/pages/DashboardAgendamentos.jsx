@@ -28,7 +28,7 @@ import MarcarAula from "../components/MarcarAula";
 import ReagendaAula from "../components/ReagendaAula";
 import { useEffect } from "react";
 import { Stack } from "@mui/system";
-import BrokenImageIcon from '@mui/icons-material/BrokenImage';
+import BrokenImageIcon from "@mui/icons-material/BrokenImage";
 
 dayjs.locale("pt-br");
 
@@ -134,7 +134,7 @@ function DashboardAgendamentos() {
         ? agendada
         : rejeitadas;
 
-  return (
+  const DashboardAgendamentos = (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -269,36 +269,36 @@ function DashboardAgendamentos() {
                     </div>
 
                     <div className="w-full h-px bg-gray-100 mb-6" />
-                  <Stack>
-                    <div className="flex flex-col md:flex-row gap-4 md:gap-12 text-center mb-6 justify-center">
-                      <div>
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
-                          Data
-                        </p>
-                        <p className="font-bold text-lg text-gray-900 mt-1">
-                          {dayjs(aula.dataInicio).format(
-                            "D [de] MMMM [de] YYYY",
-                          )}
-                        </p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
-                          Horário
-                        </p>
-                        <p className="font-bold text-lg text-gray-900 mt-1">
-                          {dayjs(aula.dataInicio).format("HH:mm")} -{" "}
-                          {dayjs(aula.dataInicio)
-                            .add(1, "hour")
-                            .format("HH:mm")}
-                        </p>
-                      </div>
+                    <Stack>
+                      <div className="flex flex-col md:flex-row gap-4 md:gap-12 text-center mb-6 justify-center">
+                        <div>
+                          <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
+                            Data
+                          </p>
+                          <p className="font-bold text-lg text-gray-900 mt-1">
+                            {dayjs(aula.dataInicio).format(
+                              "D [de] MMMM [de] YYYY",
+                            )}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
+                            Horário
+                          </p>
+                          <p className="font-bold text-lg text-gray-900 mt-1">
+                            {dayjs(aula.dataInicio).format("HH:mm")} -{" "}
+                            {dayjs(aula.dataInicio)
+                              .add(1, "hour")
+                              .format("HH:mm")}
+                          </p>
+                        </div>
                       </div>
                       <div className="mb-2">
                         <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">
                           {aula.localAula}
                         </p>
                       </div>
-                      </Stack>
+                    </Stack>
 
                     {aula.statusAula !== "recusada" &&
                       aula.statusAula !== "cancelada" && (
@@ -314,7 +314,7 @@ function DashboardAgendamentos() {
                           >
                             Adiar aula
                           </Button>
-                          
+
                           <Button
                             onClick={() => {
                               handleCancel(aula._id);
@@ -329,11 +329,15 @@ function DashboardAgendamentos() {
                               "Cancelar aula"
                             )}
                           </Button>
-                      </div>
-                    )}
+                        </div>
+                      )}
                     {aula.statusAula === "agendada" && (
                       <div className="flex flex-col items-center gap-2 mt-4">
-                        <Button color="success" variant="contained" startIcon={<Check />} >
+                        <Button
+                          color="success"
+                          variant="contained"
+                          startIcon={<Check />}
+                        >
                           Pagar
                         </Button>
                       </div>
@@ -353,7 +357,7 @@ function DashboardAgendamentos() {
             <People /> Instrutores
           </button>
           <button
-          onClick={() => navigator("/dashboard-marcar")}
+            onClick={() => navigator("/dashboard-marcar")}
             className="flex flex-col items-center text-gray-600 text-xs"
           >
             <CalendarMonth /> Agendar
@@ -372,6 +376,17 @@ function DashboardAgendamentos() {
           </button>
         </div>
       </div>
+    </motion.div>
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      {DashboardAgendamentos};
     </motion.div>
   );
 }

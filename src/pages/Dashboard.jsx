@@ -78,14 +78,7 @@ function Dashboard() {
     colunas[index % 3].push(instrutor);
   });
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 0 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="flex h-screen bg-white font-['Inter'] overflow-hidden">
+  const Dashboard = (<div className="flex h-screen bg-white font-['Inter'] overflow-hidden">
         <MarcarAula
           open={marcarAulaOpen}
           onClose={() => setMarcarAulaOpen(false)}
@@ -274,7 +267,16 @@ function Dashboard() {
             <Logout /> Sair
           </button>
         </div>
-      </div>
+      </div>)
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      {Dashboard}
     </motion.div>
   );
 }

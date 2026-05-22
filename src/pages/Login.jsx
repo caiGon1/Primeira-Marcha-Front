@@ -66,14 +66,7 @@ function Login() {
     }
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 0 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <div className="h-screen w-screen flex flex-col md:flex-row items-center justify-center ">
+  const login = (<div className="h-screen w-screen flex flex-col md:flex-row items-center justify-center ">
         <img
           src="/img/+.svg"
           className="absolute top-10 left-1/2 translate-x-30 w-12 opacity-100 hidden md:block"
@@ -182,13 +175,6 @@ function Login() {
               />
 
               <div className="flex items-center flex-col p-4">
-                <a
-                  href=""
-                  className="font-poppins text-center text-sm text-[#df7f01] font-bold "
-                >
-                  Esqueci minha senha
-                </a>
-
                 <Button
                   className="border-2 rounded border-gray-400"
                   type="submit"
@@ -206,7 +192,17 @@ function Login() {
             </form>
           </div>
         </Box>
-      </div>
+  </div>
+  )
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      { login }
     </motion.div>
   );
 }

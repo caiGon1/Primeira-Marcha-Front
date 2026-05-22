@@ -18,7 +18,6 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { motion } from "framer-motion";
 
-
 function CadastroCondutor() {
   const navigator = useNavigate();
   const [uf, setUf] = useState("");
@@ -71,7 +70,6 @@ function CadastroCondutor() {
       alert("Cadastro realizado com sucesso!");
       console.log(formData);
       navigator("/dashboard");
-
     } catch (error) {
       console.error("Erro ao cadastrar condutor:", error);
       console.log(formData);
@@ -82,13 +80,7 @@ function CadastroCondutor() {
     }
   };
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: 0 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: 0 }}
-      transition={{ duration: 0.4 }}
-    >
+  const CadastroCondutor = (
     <div className="h-screen w-screen flex items-center justify-center">
       <ArrowBackIosIcon
         className="absolute top-4 left-4 cursor-pointer"
@@ -103,9 +95,8 @@ function CadastroCondutor() {
         src="/img/Group-48.svg"
         className="absolute bottom-0 translate-x-40 w-40 opacity-100 hidden md:block"
       />
-    
+
       <div className="md:bg-[url('/img/logotransparente.png')] md:bg-no-repeat md:bg-position-[10%_0%] md:bg-size-[250px] h-screen w-1/2 flex items-center justify-center">
-     
         <form autoComplete="off" onSubmit={handleSubmit}>
           <Box className="p-4 rounded flex flex-col gap-2 w-fit justify-center ">
             <Stack spacing={2}>
@@ -172,7 +163,7 @@ function CadastroCondutor() {
                   slotProps={{
                     textField: {
                       InputProps: {
-                        sx: { borderRadius: "30px" }, 
+                        sx: { borderRadius: "30px" },
                       },
                     },
                   }}
@@ -247,13 +238,11 @@ function CadastroCondutor() {
               color="neutral"
               type="submit"
               disabled={loading}
-              sx={
-                {
-                  borderRadius: "30px",
-                  width: "75%", 
-                  alignSelf: "center",
-                }
-              }
+              sx={{
+                borderRadius: "30px",
+                width: "75%",
+                alignSelf: "center",
+              }}
             >
               {loading ? <CircularProgress size={20} /> : "Cadastrar"}
             </Button>
@@ -273,8 +262,18 @@ function CadastroCondutor() {
         </h1>
         <img src="/img/Group-81.svg" className="w-1/2" />
       </div>
-      </div>
-      </motion.div>
+    </div>
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 0 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: 0 }}
+      transition={{ duration: 0.4 }}
+    >
+      {CadastroCondutor}
+    </motion.div>
   );
 }
 

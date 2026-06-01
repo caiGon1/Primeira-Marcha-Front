@@ -56,6 +56,32 @@ function DashboardAgendamentos() {
     reagendada: "text-blue-600",
   };
 
+  const pagarAula = async (aulaId, dadosPagamento) => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await axios.post(
+        `https://primeira-marcha-backend.vercel.app/create-preference`,
+        dadosPagamento, // Envia o objeto gerado no momento do clique
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      // Como vimos no Postman: response.data é {"message": "...", "response": "https://..."}
+      if (response.data && response.data.response) {
+        // Redireciona o usuário para o Checkout do Mercado Pago
+        window.location.href = response.data.response;
+      } else {
+        console.error(
+          "Link de redirecionamento não encontrado na resposta da API:",
+          response.data,
+        );
+      }
+    } catch (error) {
+      console.log(error.response ? error.response.data : error.message);
+    }
+  };
+
   const cancelarAula = async (aulaId) => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -97,7 +123,7 @@ function DashboardAgendamentos() {
                 `https://primeira-marcha-backend.vercel.app/instrutor/${aula.instrutor}`,
                 { headers: { Authorization: `Bearer ${token}` } },
               );
-              return { ...aula, nomeInstrutor: instrRes.data.nome };
+              return { ...aula, nomeInstrutor: instrRes.data.nome, valorAula: instrRes.data.valorAula };
             } catch {
               return { ...aula, nomeInstrutor: "Desconhecido" };
             }
@@ -337,6 +363,17 @@ function DashboardAgendamentos() {
                           color="success"
                           variant="contained"
                           startIcon={<Check />}
+                          onClick={() => {
+                            // 1. Monta o objeto com os dados da aula atual
+                            const dadosParaEnvio = {
+                              title: `Aula em ${aula.localAula} com ${aula.nomeInstrutor}`,
+                              quantity: 1,
+                              unit_price: Number(aula.valorAula),
+                            };
+
+                            // 3. Dispara a função passando os dados em tempo real
+                            pagarAula(aula._id, dadosParaEnvio);
+                          }}
                         >
                           Pagar
                         </Button>

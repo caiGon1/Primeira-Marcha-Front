@@ -9,7 +9,7 @@ import {
   Button,
   DialogTitle,
   TextField,
-  CircularProgress
+  CircularProgress,
 } from "@mui/material";
 
 function Profile({ open, onClose, tipo }) {
@@ -18,28 +18,27 @@ function Profile({ open, onClose, tipo }) {
   const [nomePerfilOpen, setNomePerfilOpen] = useState(false);
   const [emailPerfilOpen, setEmailPerfilOpen] = useState(false);
   const [senhaPerfilOpen, setSenhaPerfilOpen] = useState(false);
+  const [valorAulaOpen, setValorAulaOpen] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
   const [novoNome, setNovoNome] = useState("");
   const [novoEmail, setNovoEmail] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
-
- 
-
+  const [novoValorAula, setNovoValorAula] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
       const endpoint = `${tipo}/${id}`;
-      
+
       try {
         const res = await axios.get(
           `https://primeira-marcha-backend.vercel.app/${endpoint}`,
           {
             headers: { Authorization: `Bearer ${token}` },
-          }
+          },
         );
 
         setUser(res.data);
@@ -51,21 +50,42 @@ function Profile({ open, onClose, tipo }) {
     fetchUser();
   }, []);
 
-
-
-
-
-
   const updateUser = async (data) => {
     const token = localStorage.getItem("token");
     const id = localStorage.getItem("id");
-     const endpoint = `${tipo}/${id}`;
+    const endpoint = `${tipo}/${id}`;
 
     try {
       setLoading(true);
 
       await axios.put(
         `https://primeira-marcha-backend.vercel.app/${endpoint}`,
+        data,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      alert("Atualizado com sucesso!");
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao atualizar.");
+    } finally {
+      setLoading(false);
+      window.location.reload();
+    }
+  };
+
+  const updateValor = async (data) => {
+    const token = localStorage.getItem("token");
+    const id = localStorage.getItem("id");
+    const endpoint = `${tipo}/${id}`;
+
+    try {
+      setLoading(true);
+
+      await axios.patch(
+        `https://primeira-marcha-backend.vercel.app/${endpoint}/valor-aula`,
         data,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -78,31 +98,28 @@ function Profile({ open, onClose, tipo }) {
       alert("Erro ao atualizar.");
     } finally {
       setLoading(false);
-       window.location.reload();
+      window.location.reload();
     }
   };
-
-
 
   if (!user) return null;
 
   return (
     <>
-
       <MeuModal open={open} onClose={onClose}>
         <p>Olá, {user.nome}!</p>
 
-        <Button onClick={() => setNomePerfilOpen(true)}>
-          Alterar nome
-        </Button>
+        <Button onClick={() => setNomePerfilOpen(true)}>Alterar nome</Button>
 
-        <Button onClick={() => setEmailPerfilOpen(true)}>
-          Alterar email
-        </Button>
+        <Button onClick={() => setEmailPerfilOpen(true)}>Alterar email</Button>
 
-        <Button onClick={() => setSenhaPerfilOpen(true)}>
-          Alterar senha
-        </Button>
+        <Button onClick={() => setSenhaPerfilOpen(true)}>Alterar senha</Button>
+
+        {tipo === "instrutor" && (
+          <Button onClick={() => setValorAulaOpen(true)}>
+            Atualizar valor da aula
+          </Button>
+        )}
       </MeuModal>
 
       <MeuModal open={nomePerfilOpen} onClose={() => setNomePerfilOpen(false)}>
@@ -126,8 +143,10 @@ function Profile({ open, onClose, tipo }) {
         </form>
       </MeuModal>
 
-
-      <MeuModal open={emailPerfilOpen} onClose={() => setEmailPerfilOpen(false)}>
+      <MeuModal
+        open={emailPerfilOpen}
+        onClose={() => setEmailPerfilOpen(false)}
+      >
         <DialogTitle>Alterar email</DialogTitle>
 
         <form
@@ -148,7 +167,10 @@ function Profile({ open, onClose, tipo }) {
         </form>
       </MeuModal>
 
-      <MeuModal open={senhaPerfilOpen} onClose={() => setSenhaPerfilOpen(false)}>
+      <MeuModal
+        open={senhaPerfilOpen}
+        onClose={() => setSenhaPerfilOpen(false)}
+      >
         <DialogTitle>Alterar senha</DialogTitle>
 
         <form
@@ -164,6 +186,27 @@ function Profile({ open, onClose, tipo }) {
           />
 
           <Button type="submit">
+            {loading ? <CircularProgress size={20} /> : "Salvar"}
+          </Button>
+        </form>
+      </MeuModal>
+
+      <MeuModal open={valorAulaOpen} onClose={() => setValorAulaOpen(false)}>
+        <DialogTitle>Atualizar valor da aula</DialogTitle>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            updateValor({ valorAula: novoValorAula });
+          }}
+        >
+          <TextField
+            type="number" 
+            label="Valor da Aula (R$)"
+            value={novoValorAula}
+            onChange={(e) => setNovoValorAula(e.target.value)}
+            fullWidth
+          />
+          <Button type="submit" style={{ marginTop: "10px" }}>
             {loading ? <CircularProgress size={20} /> : "Salvar"}
           </Button>
         </form>

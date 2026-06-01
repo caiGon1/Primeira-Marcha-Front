@@ -66,10 +66,8 @@ function CadastroCondutor() {
         "https://primeira-marcha-backend.vercel.app/aluno",
         formData,
       );
-      console.log("Resposta do servidor:", response.data);
-      alert("Cadastro realizado com sucesso!");
-      console.log(formData);
-      navigator("/dashboard");
+      alert("Cadastro realizado com sucesso! Faça login para acessar sua conta.");
+      navigator("/");
     } catch (error) {
       console.error("Erro ao cadastrar condutor:", error);
       console.log(formData);
